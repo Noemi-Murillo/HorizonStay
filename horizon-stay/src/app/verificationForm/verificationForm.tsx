@@ -1,11 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const VerificationForm = ({ onVerify }: { onVerify: (data: any) => void }) => {
+interface Props {
+  onVerify: (data: any) => void;
+  resetSignal?: boolean;
+}
+
+const VerificationForm = ({ onVerify, resetSignal }: Props) => {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
+
+  useEffect(() => {
+    if (resetSignal) {
+      setCode("");
+      setName("");
+      setDate("");
+    }
+  }, [resetSignal]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +33,7 @@ const VerificationForm = ({ onVerify }: { onVerify: (data: any) => void }) => {
         status: "Confirmada",
       });
     } else {
-      alert("Datos incorrectos. Intenta nuevamente.");
+      onVerify(null);
     }
   };
 
@@ -28,9 +41,7 @@ const VerificationForm = ({ onVerify }: { onVerify: (data: any) => void }) => {
     <form onSubmit={handleSubmit} className="space-y-4">
       <h2 className="text-2xl font-bold mb-6 text-green-700 text-center">Consulta tu Reserva</h2>
       <div>
-        <label htmlFor="code" className="block font-semibold text-gray-700 mb-1">
-          Código de reserva
-        </label>
+        <label htmlFor="code" className="block font-semibold text-gray-700 mb-1">Código de reserva</label>
         <input
           type="text"
           id="code"
@@ -41,9 +52,7 @@ const VerificationForm = ({ onVerify }: { onVerify: (data: any) => void }) => {
         />
       </div>
       <div>
-        <label htmlFor="name" className="block font-semibold text-gray-700 mb-1">
-          Nombre completo
-        </label>
+        <label htmlFor="name" className="block font-semibold text-gray-700 mb-1">Nombre completo</label>
         <input
           type="text"
           id="name"
@@ -54,9 +63,7 @@ const VerificationForm = ({ onVerify }: { onVerify: (data: any) => void }) => {
         />
       </div>
       <div>
-        <label htmlFor="date" className="block font-semibold text-gray-700 mb-1">
-          Fecha de inicio de estadía
-        </label>
+        <label htmlFor="date" className="block font-semibold text-gray-700 mb-1">Fecha de inicio de estadía</label>
         <input
           type="date"
           id="date"
@@ -77,4 +84,3 @@ const VerificationForm = ({ onVerify }: { onVerify: (data: any) => void }) => {
 };
 
 export default VerificationForm;
-
