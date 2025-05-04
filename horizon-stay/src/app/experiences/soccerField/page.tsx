@@ -40,7 +40,7 @@ const Section = ({ title, description, image, reverse, bgColor }: {
   );
 };
 
-const scoccerPage = () => {
+const soccerFieldPage = () => {
   return (
     <ParallaxProvider>
       <div className="space-y-24 bg-gray-50">
@@ -59,4 +59,4 @@ const scoccerPage = () => {
   );
 };
 
-export default scoccerPage;
+export default soccerFieldPage;
