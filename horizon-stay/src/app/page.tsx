@@ -16,7 +16,7 @@ export default function Home() {
       </section>
 
       <section className="w-full py-16 px-8 sm:px-20 bg-gray-100">
-        <h2 className="text-3xl font-bold text-center mb-12">Cabañas Destacadas</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">Nuestras Cabañas</h2>
         <CabinList/>
       </section>
 
