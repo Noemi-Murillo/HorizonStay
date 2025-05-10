@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #ffffff;
@@ -24,4 +27,21 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   @apply text-gray-800;
+}
+
+@layer utilities {
+  .animate-inflate {
+    animation: inflate 300ms ease-out forwards;
+  }
+
+  @keyframes inflate {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 }
