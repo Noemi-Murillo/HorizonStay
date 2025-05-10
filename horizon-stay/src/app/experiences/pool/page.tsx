@@ -50,14 +50,20 @@ const PoolPage = () => {
         <Section
           title="Piscina de ensueño"
           description="Nada en nuestra piscina climatizada rodeada de naturaleza. Perfecta para toda la familia y abierta todo el año."
-          image="/R.png"
+          image="/pool/mainPool.png"
           reverse
           bgColor="bg-white"
         />
         <Section
           title="Piscina para niños"
           description="Diversión asegurada en nuestra piscina diseñada especialmente para los más pequeños, con profundidad segura, juegos acuáticos y supervisión constante."
-          image="/R.png"
+          image="/pool/RestaurantPool.png"
+          bgColor="bg-gray-50"
+        />
+        <Section
+          title="Piscina en tu cabañá"
+          description="Disfruta tu estadia en la pisicina cerca de tu cabañá"
+          image="/pool/cabinPool.png"
           bgColor="bg-gray-50"
         />
       </div>
