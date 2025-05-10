@@ -47,33 +47,33 @@ const RestaurantPage = () => {
         <Section
           title="Restaurante Gourmet"
           description="Déjate sorprender por nuestro restaurante gourmet, donde cada plato es una experiencia. Ofrecemos cocina internacional con ingredientes frescos y una vista que deleita. Vive momentos inolvidables en un ambiente sofisticado, con atención al detalle y servicio personalizado."
-          image="/img/restaurante.jpg"
+          image="/restaurant/restaurant.png"
           bgColor="bg-white"
         />
         <Section
           title="Ambiente acogedor"
           description="Nuestro restaurante ofrece un entorno cálido y elegante, ideal para cenas románticas, reuniones familiares o eventos especiales. Disfruta de una atmósfera tranquila con iluminación tenue, decoración cuidada y música suave que complementan perfectamente cada comida."
-          image="/img/restaurante-ambiente.jpg"
+          image="/restaurant/bar.png"
           reverse
           bgColor="bg-gray-50"
         />
         <Section
           title="Ingredientes frescos"
           description="Cada platillo es preparado con productos locales frescos, seleccionados cuidadosamente para brindar el mejor sabor y calidad. Trabajamos con productores regionales para garantizar ingredientes de temporada y fomentar la sostenibilidad alimentaria."
-          image="/img/ingredientes.jpg"
+          image="/restaurant/food.png"
           bgColor="bg-white"
         />
         <Section
           title="Variedad gastronómica"
           description="Contamos con un menú diverso que incluye opciones vegetarianas, veganas, sin gluten y para niños. Desde desayunos energizantes hasta cenas exclusivas, tenemos algo para cada gusto y momento del día."
-          image="/img/menu.jpg"
+          image="/restaurant/gastronomicVariety.png"
           reverse
           bgColor="bg-gray-50"
         />
         <Section
           title="Vistas panorámicas"
           description="Disfruta de una experiencia culinaria con vistas espectaculares al bosque y las montañas. Nuestro restaurante combina sabores exquisitos con un entorno natural para que cada comida sea memorable."
-          image="/img/vista-restaurante.jpg"
+          image="/restaurant/balcony.png"
           bgColor="bg-white"
         />
       </div>
