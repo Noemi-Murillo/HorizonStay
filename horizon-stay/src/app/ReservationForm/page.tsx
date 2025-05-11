@@ -9,6 +9,8 @@ type ReservationData = {
   lastName: string
   email: string
   phone: string
+  end: string
+  start: string
   notes?: string
   cottage?: string
 }
@@ -21,6 +23,8 @@ const ReservationForm = () => {
     lastName: "",
     email: "",
     phone: "",
+    end: "",
+    start: "",
     notes: "",
     cottage: "",
   })
@@ -97,7 +101,7 @@ const ReservationForm = () => {
 
       <SelectCottage />
 
-      <CalendarReservation onDateSelect={(dates) => console.log('Dates:', dates)} />
+      <CalendarReservation onDateSelect={(dates) => (formData.end = dates.endDate) && (formData.start = dates.startDate)}/>
 
       <div>
 

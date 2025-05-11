@@ -8,12 +8,19 @@ type Props = {
     onDateSelect: (range: { startDate: string; endDate: string }) => void
 }
 
-const reservedDates = [new Date(2025, 4, 14), new Date(2025, 4, 15)]
+const reservedDates = [new Date(2025, 4, 14), new Date(2025, 4, 15)] //Obtener datos de Firebase
 
 const getToday = (): Date => {
     const now = new Date()
     return new Date(now.getFullYear(), now.getMonth(), now.getDate())
 }
+
+const calculateNights = (from?: Date, to?: Date): number => {
+    if (!from || !to) return 0
+    const diffTime = to.getTime() - from.getTime()
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+}
+
 
 const CalendarReservation = ({ onDateSelect }: Props) => {
     const [range, setRange] = useState<DateRange | undefined>()
@@ -50,7 +57,11 @@ const CalendarReservation = ({ onDateSelect }: Props) => {
         }
 
         const from = selectedRange.from
-        const to = selectedRange.to ?? new Date(from.getTime() + 86400000)
+        let to = selectedRange.to ?? new Date(from)
+
+        if (from.toDateString() === to.toDateString()) {
+            to = new Date(from.getFullYear(), from.getMonth(), from.getDate() + 1)
+        }
 
         if (isRangeBeforeToday(from, to)) {
             setError('Selecionaste fechas pasadas.')
@@ -116,8 +127,14 @@ const CalendarReservation = ({ onDateSelect }: Props) => {
                     ✅ Fechas seleccionadas: <strong>{formatDisplayDate(range.from)}</strong> a{' '}
                     <strong>
                         {formatDisplayDate(range.to) ??
-                            formatDisplayDate(new Date(range.from.getTime() + 86400000))}
+                            formatDisplayDate(new Date(range.from.getTime() + 86400001))}
                     </strong>
+                </div>
+            )}
+
+            {range?.to && (
+                <div className="mt-1 text-green-700">
+                    🛏️ {calculateNights(range.from, range.to)} noche(s)
                 </div>
             )}
 
