@@ -15,8 +15,6 @@ type ReservationData = {
   cottage?: string
 }
 
-
-
 const ReservationForm = () => {
   const [formData, setFormData] = useState<ReservationData>({
     name: "",
@@ -35,11 +33,19 @@ const ReservationForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     console.log("Reserva enviada:", formData)
-    // Aquí podrías mandar los datos a una API o base de datos
+    
+    const response = await fetch('/api/guest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await response.json();
+    console.log(data)
   }
   
   return (
@@ -99,7 +105,7 @@ const ReservationForm = () => {
         />
       </div>
 
-      <SelectCottage />
+      <SelectCottage onChange={(cottage)=> formData.cottage = cottage} />
 
       <CalendarReservation onDateSelect={(dates) => (formData.end = dates.endDate) && (formData.start = dates.startDate)}/>
 
