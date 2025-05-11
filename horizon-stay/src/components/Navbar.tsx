@@ -33,8 +33,7 @@ export default function Navbar() {
   return (
     <nav className="bg-gray-100 p-4 shadow relative">
       <div className="flex items-center justify-between">
-        <Link href="/" className="text-lg font-semibold"> Horizon Stay</Link>
-
+        <Link href="/" className="text-lg font-semibold">Horizon Stay</Link>
         <button className="lg:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
@@ -47,32 +46,42 @@ export default function Navbar() {
         </li>
 
         <li className="relative" ref={dropdownRefs.getToKnowUs}>
-          <button onClick={() => toggleItem("getToKnowUs")}className="px-3 py-1 rounded hover:bg-gray-200">
+          <button onClick={() => toggleItem("getToKnowUs")} className="px-3 py-1 rounded hover:bg-gray-200">
             Conócenos
           </button>
           {activeItem === "getToKnowUs" && (
-            <div className="absolute left-0 top-full mt-2 w-48 bg-white border rounded-xl shadow-lg z-10">
+            <div className="absolute left-0 top-full mt-2 w-48 bg-white border rounded-xl shadow-lg z-10 origin-top-left animate-inflate">
               <div className="absolute -top-2 left-4 w-3 h-3 bg-white rotate-45 border-l border-t z-[-1]" />
               <ul className="flex flex-col p-2">
-                <li><Link href="/aboutUs/location" className="block px-2 py-1 hover:bg-gray-100 rounded">Ubicación</Link></li>
-                <li><Link href="/historia" className="block px-2 py-1 hover:bg-gray-100 rounded">Historia</Link></li>
-                <li><Link href="/politicas" className="block px-2 py-1 hover:bg-gray-100 rounded">Políticas</Link></li>
+                <li className="transition-all duration-300 delay-[100ms]">
+                  <Link href="/aboutUs/location" className="block px-2 py-1 hover:bg-gray-100 rounded">Ubicación</Link>
+                </li>
+                <li className="transition-all duration-300 delay-[200ms]">
+                  <Link href="/historia" className="block px-2 py-1 hover:bg-gray-100 rounded">Historia</Link>
+                </li>
+                <li className="transition-all duration-300 delay-[300ms]">
+                  <Link href="/politicas" className="block px-2 py-1 hover:bg-gray-100 rounded">Políticas</Link>
+                </li>
               </ul>
             </div>
           )}
         </li>
 
-        <li><Link href="/cabin/gallery" className="px-3 py-1 rounded hover:bg-gray-200 inline-block" onClick={() => setMobileMenuOpen(false)}>Galería </Link></li>
+        <li><Link href="/cabin/gallery" className="px-3 py-1 rounded hover:bg-gray-200 inline-block" onClick={() => setMobileMenuOpen(false)}>Galería</Link></li>
         <li className="relative" ref={dropdownRefs.reservations}>
           <button onClick={() => toggleItem("reservations")} className="px-3 py-1 rounded hover:bg-gray-200">
             Reservas
           </button>
           {activeItem === "reservations" && (
-            <div className="absolute left-0 top-full mt-2 w-48 bg-white border rounded-xl shadow-lg z-10">
+            <div className="absolute left-0 top-full mt-2 w-48 bg-white border rounded-xl shadow-lg z-10 origin-top-left animate-inflate">
               <div className="absolute -top-2 left-4 w-3 h-3 bg-white rotate-45 border-l border-t z-[-1]" />
               <ul className="flex flex-col p-2">
-                <li><Link href="/ReservationForm" className="block px-2 py-1 hover:bg-gray-100 rounded">Reservar</Link></li>
-                <li><Link href="/bookingInformation" className="block px-2 py-1 hover:bg-gray-100 rounded"> Mi Reserva</Link></li>
+                <li className="transition-all duration-300 delay-[100ms]">
+                  <Link href="/ReservationForm" className="block px-2 py-1 hover:bg-gray-100 rounded">Reservar</Link>
+                </li>
+                <li className="transition-all duration-300 delay-[200ms]">
+                  <Link href="/bookingInformation" className="block px-2 py-1 hover:bg-gray-100 rounded">Mi Reserva</Link>
+                </li>
               </ul>
             </div>
           )}
@@ -83,12 +92,18 @@ export default function Navbar() {
             Experiencias
           </button>
           {activeItem === "experiences" && (
-            <div className="absolute left-0 top-full mt-2 w-48 bg-white border rounded-xl shadow-lg z-10">
+            <div className="absolute left-0 top-full mt-2 w-48 bg-white border rounded-xl shadow-lg z-10 origin-top-left animate-inflate">
               <div className="absolute -top-2 left-4 w-3 h-3 bg-white rotate-45 border-l border-t z-[-1]" />
               <ul className="flex flex-col p-2">
-                <li><Link href="/experiences/pool" className="block px-2 py-1 hover:bg-gray-100 rounded">Piscina</Link></li>
-                <li><Link href="/experiences/soccerField" className="block px-2 py-1 hover:bg-gray-100 rounded">Cancha de fútbol</Link></li>
-                <li><Link href="/experiences/restaurant" className="block px-2 py-1 hover:bg-gray-100 rounded">Restaurante</Link></li>
+                <li className="transition-all duration-300 delay-[100ms]">
+                  <Link href="/experiences/pool" className="block px-2 py-1 hover:bg-gray-100 rounded">Piscina</Link>
+                </li>
+                <li className="transition-all duration-300 delay-[200ms]">
+                  <Link href="/experiences/soccerField" className="block px-2 py-1 hover:bg-gray-100 rounded">Cancha de fútbol</Link>
+                </li>
+                <li className="transition-all duration-300 delay-[300ms]">
+                  <Link href="/experiences/restaurant" className="block px-2 py-1 hover:bg-gray-100 rounded">Restaurante</Link>
+                </li>
               </ul>
             </div>
           )}
