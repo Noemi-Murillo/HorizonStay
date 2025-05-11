@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createData } from '@/controllers/reservationController';
+import { ok } from 'assert';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const id = await createData(body);
-    return NextResponse.json({ mensaje: 'Reservación creada exitosamente.', id });
+    return NextResponse.json({ message: 'Reservación creada exitosamente.', id, ok:true});
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    return NextResponse.json({ error: error.message, ok:false }, { status: 400 });
   }
 }

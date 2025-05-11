@@ -2,7 +2,9 @@
 
 import React, { useState } from "react"
 import SelectCottage from "@/components/reservationComponents/SelectCottage"
-import CalendarReservation from "@/components/reservationComponents/CalendarReservation" 
+import CalendarReservation from "@/components/reservationComponents/CalendarReservation"
+import ReservationButton from "@/components/reservationComponents/ReservationButton"
+import Swal from 'sweetalert2'
 
 type ReservationData = {
   name: string
@@ -37,7 +39,7 @@ const ReservationForm = () => {
     e.preventDefault()
 
     console.log("Reserva enviada:", formData)
-    
+
     const response = await fetch('/api/guest', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -46,8 +48,24 @@ const ReservationForm = () => {
 
     const data = await response.json();
     console.log(data)
+
+    if (data.ok) {
+      Swal.fire({
+        title: "¡Éxito!",
+        text: `${data.message}`,
+        icon: "success"
+      });
+    } else {
+        Swal.fire({
+        title: "¡Fracaso!",
+        text: `${data.error.message}`,
+        icon: "warning"
+      });
+    }
+
+
   }
-  
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -105,9 +123,9 @@ const ReservationForm = () => {
         />
       </div>
 
-      <SelectCottage onChange={(cottage)=> formData.cottage = cottage} />
+      <SelectCottage onChange={(cottage) => formData.cottage = cottage} />
 
-      <CalendarReservation onDateSelect={(dates) => (formData.end = dates.endDate) && (formData.start = dates.startDate)}/>
+      <CalendarReservation onDateSelect={(dates) => (formData.end = dates.endDate) && (formData.start = dates.startDate)} />
 
       <div>
 
@@ -124,12 +142,8 @@ const ReservationForm = () => {
         />
       </div>
 
-      <button
-        type="submit"
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-      >
-        Enviar reserva
-      </button>
+      <ReservationButton />
+
     </form>
   )
 }
