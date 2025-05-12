@@ -93,7 +93,7 @@ const CalendarReservation = ({ onDateSelect }: Props) => {
         })
 
     return (
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center  ">
             <h2 className="text-xl font-semibold mb-2">Select your dates</h2>
 
             <div className="rounded border p-4 shadow-md">

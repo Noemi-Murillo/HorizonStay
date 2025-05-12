@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React, { useState, useRef, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const [activeItem, setActiveItem] = useState<string | null>(null);
@@ -13,6 +14,9 @@ export default function Navbar() {
     reservations: useRef<HTMLLIElement>(null),
     experiences: useRef<HTMLLIElement>(null),
   };
+
+  const path = usePathname();
+
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -30,6 +34,8 @@ export default function Navbar() {
     setActiveItem(activeItem === item ? null : item);
   };
 
+  if (path.startsWith('/adminPages')) return null;
+  
   return (
     <nav className="bg-gray-100 p-4 shadow relative">
       <div className="flex items-center justify-between">
@@ -41,8 +47,8 @@ export default function Navbar() {
 
       <ul className={`${mobileMenuOpen ? "block" : "hidden"} lg:flex gap-6 mt-4 lg:mt-0 lg:items-center lg:justify-start`}>
         <li><Link href="/" className="px-3 py-1 rounded hover:bg-gray-200 inline-block" onClick={() => setMobileMenuOpen(false)}>
-            Inicio
-          </Link>
+          Inicio
+        </Link>
         </li>
 
         <li className="relative" ref={dropdownRefs.getToKnowUs}>
@@ -108,7 +114,20 @@ export default function Navbar() {
             </div>
           )}
         </li>
+
+
+        <ul className="lg:ml-auto mt-6 lg:mt-0">
+          <li>
+            <Link
+              href="/logIn"
+              className="px-3 py-1 rounded hover:bg-blue-200 text-blue-700 border border-blue-500 inline-block transition-all"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Iniciar sesión
+            </Link>
+          </li>
+        </ul>
       </ul>
-    </nav>
+    </nav >
   );
 }

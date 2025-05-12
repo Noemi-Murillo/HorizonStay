@@ -6,11 +6,11 @@ export default function Home() {
   return (
     <div className="relative min-h-screen bg-white font-sans">
       <div className="grid grid-rows-[auto_1fr_auto]">
-        <section className="relative w-full h-[70vh] bg-cover bg-center bg-no-repeat flex items-center justify-center" style={{ backgroundImage: "url('/images/cabana-hero.jpg')" }}>
+        <section className="relative w-full h-[70vh] bg-cover bg-center bg-no-repeat flex items-center justify-center" style={{ backgroundImage: "url('/cabins/horizonStay.png')" }}>
           <div className="bg-black/50 w-full h-full absolute top-0 left-0" />
           <div className="relative z-10 text-center text-white px-6 max-w-2xl">
             <h1 className="text-4xl sm:text-5xl font-bold mb-4">Escápate a la Naturaleza</h1>
-            <p className="text-lg sm:text-xl mb-6">Encuentra tu cabaña perfecta para tu próximo viaje.</p>
+            <p className="text-lg sm:text-xl mb-6 font-bold">Encuentra tu cabaña perfecta para tu próximo viaje.</p>
             <button className="bg-green-600 hover:bg-green-700 transition px-6 py-3 rounded-full text-white text-lg">
               Reserva Ahora
             </button>
