@@ -1,0 +1,45 @@
+{
+  "saludo": {
+    "examples": ["hola", "buenas", "qué tal", "hey"],
+    "responses": [
+      "¡Hola! 👋 Estoy aquí para ayudarte con dudas sobre nuestras cabañas. Puedes preguntarme sobre precios, ubicación, horarios, etc."
+    ]
+  },
+  "precio": {
+    "examples": ["¿cuánto cuesta una noche?", "precios", "tarifas por noche", "¿qué vale dormir ahí?"],
+    "responses": [
+      "Nuestros precios varían según la temporada y la cabaña. Puedes consultar la sección de “Cabañas destacadas” o preguntarme por una en específico."
+    ]
+  },
+  "ubicacion": {
+    "examples": ["¿dónde están?", "ubicación del lugar", "dirección", "¿cómo llego?"],
+    "responses": [
+      "Estamos en una zona natural privilegiada, cerca de [lugar]. Te enviaré un mapa si lo necesitas 🗺️."
+    ]
+  },
+  "checkin_checkout": {
+    "examples": ["¿a qué hora es el check-in?", "¿puedo llegar temprano?", "¿a qué hora debo salir?"],
+    "responses": [
+      "El check-in es a partir de las 2:00 p.m. y el check-out es hasta las 11:00 a.m."
+    ]
+  },
+  "mascotas": {
+    "examples": ["¿aceptan perros?", "¿puedo llevar a mi mascota?", "¿es pet friendly?", "mascostas", "pet"],
+    "responses": [
+      "Sí 🐾. Algunas cabañas aceptan mascotas. Por favor, consúltalo al reservar.",
+      "Nuestras instalaciones son pet friendly."
+    ]
+  },
+  "reserva": {
+    "examples": ["quiero reservar", "¿cómo hago una reserva?", "reservar ahora"],
+    "responses": [
+      "Puedes hacer tu reserva desde nuestra página principal o te puedo ayudar a elegir la mejor opción."
+    ]
+  },
+  "horario": {
+    "examples": ["Horario", "Disponibilidad de horarios"],
+    "responses": [
+      "Nuestros horarios de oficina son de 7:00 a.m. a 8:00 p.m."
+    ]
+  }
+}
