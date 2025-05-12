@@ -23,12 +23,12 @@ export async function notifyClient(reservationData: ReservationData) {
 
   <!-- Logo pequeño -->
   <div style="text-align: center; margin-bottom: 20px;">
-    <img src="data:image/png;base64, ${logoHorizonStay}" alt="Horizon Stay Logo" style="max-width: 150px;">
+    <img src="" alt="Horizon Stay Logo" style="max-width: 150px;">
   </div>
 
   <!-- Imagen grande del complejo -->
   <div style="text-align: center; margin-bottom: 30px;">
-    <img src="data:image/png;base64, ${placeImage}" alt="Complejo Horizon Stay" style="width: 100%; max-width: 600px; border-radius: 8px;">
+    <img src="" alt="Complejo Horizon Stay" style="width: 100%; max-width: 600px; border-radius: 8px;">
   </div>
 
   <!-- Texto de agradecimiento -->
