@@ -5,6 +5,7 @@ import SelectCottage from "@/components/reservationComponents/SelectCottage"
 import CalendarReservation from "@/components/reservationComponents/CalendarReservation"
 import ReservationButton from "@/components/reservationComponents/ReservationButton"
 import Swal from 'sweetalert2'
+import { useRouter } from 'next/navigation';
 
 type ReservationData = {
   name: string
@@ -18,6 +19,8 @@ type ReservationData = {
 }
 
 const ReservationForm = () => {
+
+  const router = useRouter();
   const [formData, setFormData] = useState<ReservationData>({
     name: "",
     lastName: "",
@@ -40,29 +43,46 @@ const ReservationForm = () => {
 
     console.log("Reserva enviada:", formData)
 
-    const response = await fetch('/api/guest', {
+    const response = await fetch('/api/createReservation', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
     });
 
     const data = await response.json();
-    console.log(data)
+
 
     if (data.ok) {
-      Swal.fire({
-        title: "¡Éxito!",
-        text: `${data.message}`,
-        icon: "success"
+      const email = await fetch('/api/emailReservation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data.id)
       });
-    } else {
-        Swal.fire({
-        title: "¡Fracaso!",
-        text: `${data.error.message}`,
-        icon: "warning"
-      });
-    }
 
+      const info = await email.json();
+
+      if (info.ok) {
+        Swal.fire({
+          title: "¡Éxito!",
+          text: `${data.message}`,
+          icon: "success",
+          timer: 3000,
+        });
+
+        setTimeout(() => {
+          router.push('/bookingInformation');
+        }, 3000);
+
+
+
+      } else {
+        Swal.fire({
+          title: "¡Fracaso!",
+          text: `${data.error}`,
+          icon: "warning"
+        });
+      }
+    }
 
   }
 

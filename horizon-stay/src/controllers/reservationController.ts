@@ -13,8 +13,8 @@ type ReservationData = {
 
 export async function createData(reservationData: ReservationData) {
   
-  if (!reservationData.start || !reservationData.phone || !reservationData.name || !reservationData.lastName || !reservationData.end || !reservationData.email || !reservationData.cottage) {
-    throw new Error('Faltan campos requeridos');
+  if (!reservationData.start || !reservationData.end ) {
+    throw new Error('Falta seleccionar las fechas de estadía.');
   }
 
   const id = await insertData(reservationData);

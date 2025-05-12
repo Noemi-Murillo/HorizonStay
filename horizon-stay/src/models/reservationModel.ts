@@ -40,8 +40,8 @@ async function generateUniqueReserveNumber(): Promise<string> {
 
     const exists = snapshot.exists()
       ? Object.values(snapshot.val()).some(
-          (r: any) => r.reserve_number === reserveNumber
-        )
+        (r: any) => r.reserve_number === reserveNumber
+      )
       : false
 
     if (!exists) return reserveNumber
@@ -59,9 +59,8 @@ export async function insertData(reservationData: ReservationData) {
     registration_date: new Date().toISOString(),
   })
 
-  const reservationId = uuidv4()
   const reserveNumber = await generateUniqueReserveNumber()
-  const reservationRef = ref(database, `reservations/${reservationId}`)
+  const reservationRef = ref(database, `reservations/${reserveNumber}`)
 
   await set(reservationRef, {
     cottage_id: reservationData.cottage,
@@ -69,10 +68,14 @@ export async function insertData(reservationData: ReservationData) {
     start: reservationData.start,
     guest_id: guestId,
     notes: reservationData.notes,
-    reserve_number: reserveNumber,
     status: "pendiente",
     total_price: 1000
   })
-
-  return reservationId
+  var reservationDetails = {
+    name: reservationData.name + ' ' + reservationData.lastName,
+    email: reservationData.email,
+    reservationId: reserveNumber
+    
+  }
+  return reservationDetails
 }

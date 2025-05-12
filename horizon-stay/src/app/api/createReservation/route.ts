@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { createData } from '@/controllers/reservationController';
-import { ok } from 'assert';
 
 export async function POST(request: Request) {
   try {
@@ -10,4 +9,4 @@ export async function POST(request: Request) {
   } catch (error: any) {
     return NextResponse.json({ error: error.message, ok:false }, { status: 400 });
   }
-}
+} 

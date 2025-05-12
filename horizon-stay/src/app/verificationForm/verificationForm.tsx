@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Swal from 'sweetalert2'
 
 interface Props {
   onVerify: (data: any) => void;
@@ -9,28 +10,35 @@ interface Props {
 
 const VerificationForm = ({ onVerify, resetSignal }: Props) => {
   const [code, setCode] = useState("");
-  const [name, setName] = useState("");
-  const [date, setDate] = useState("");
 
   useEffect(() => {
     if (resetSignal) {
       setCode("");
-      setName("");
-      setDate("");
     }
   }, [resetSignal]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (code === "ABC123" && name.toLowerCase() === "carlos ramírez" && date === "2025-06-15") {
+    const response = await fetch('/api/checkReservation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(code)
+    });
+
+    const data = await response.json();
+    console.log(data)
+
+
+
+    if (data.ok) {
       onVerify({
-        name: "Carlos Ramírez",
-        cabin: "Cabaña Bosque 3",
-        from: "15 de junio de 2025",
-        to: "18 de junio de 2025",
+        name: `${data.data.name}`,
+        cabin: `${data.data.cottage}`,
+        from: `${data.data.start}`,
+        to: `${data.data.end}`,
         people: 4,
-        status: "Confirmada",
+        status:`${data.data.state}`,
       });
     } else {
       onVerify(null);
@@ -51,28 +59,7 @@ const VerificationForm = ({ onVerify, resetSignal }: Props) => {
           className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
-      <div>
-        <label htmlFor="name" className="block font-semibold text-gray-700 mb-1">Nombre completo</label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-      </div>
-      <div>
-        <label htmlFor="date" className="block font-semibold text-gray-700 mb-1">Fecha de inicio de estadía</label>
-        <input
-          type="date"
-          id="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
-          className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-      </div>
+
       <button
         type="submit"
         className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-xl shadow"
