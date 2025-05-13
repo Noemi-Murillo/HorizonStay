@@ -10,10 +10,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
 
   const menuItems = [
-    { label: 'Ver Reservaciones', path: '/dashboard/reservations' },
-    { label: 'Crear Bloqueos', path: '/dashboard/block-dates' },
-    { label: 'Modificar Reservas', path: '/dashboard/edit-reservations' },
-    { label: 'Generar Predicciones', path: '/dashboard/predictions' },
+    { label: 'Ver Reservaciones', path: '/adminPages/reservations' },
+    { label: 'Crear Bloqueos', path: '/adminPages/block-dates' },
+    { label: 'Modificar Reservas', path: '/adminPages/edit-reservations' },
+    { label: 'Generar Predicciones', path: '/adminPages/predictions' },
+    { label: 'Control de Chatbot', path: '/adminPages/chatBotControl' },
   ];
 
   const handleLogout = async () => {
