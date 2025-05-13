@@ -57,10 +57,10 @@ export default function Navbar() {
                   <Link href="/aboutUs/location" className="block px-2 py-1 hover:bg-gray-100 rounded">Ubicación</Link>
                 </li>
                 <li className="transition-all duration-300 delay-[200ms]">
-                  <Link href="/historia" className="block px-2 py-1 hover:bg-gray-100 rounded">Historia</Link>
+                  <Link href="/aboutUs/history" className="block px-2 py-1 hover:bg-gray-100 rounded">Historia</Link>
                 </li>
                 <li className="transition-all duration-300 delay-[300ms]">
-                  <Link href="/politicas" className="block px-2 py-1 hover:bg-gray-100 rounded">Políticas</Link>
+                  <Link href="/aboutUs/policies" className="block px-2 py-1 hover:bg-gray-100 rounded">Políticas</Link>
                 </li>
               </ul>
             </div>
