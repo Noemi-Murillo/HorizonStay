@@ -1,104 +1,114 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { DayPicker, DateRange } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
-import { fetchUnavailableDates } from '@/controllers/datesController';
+import { useEffect, useState } from 'react'
+import { DayPicker, DateRange } from 'react-day-picker'
+import 'react-day-picker/dist/style.css'
+import { fetchUnavailableDates } from '@/controllers/datesController'
 
 type Props = {
-  onDateSelect: (range: { startDate: string; endDate: string }) => void;
-};
+  onDateSelect: (range: { startDate: string; endDate: string; numNights: number }) => void
+  cottageType: 'lago' | 'bosque' | 'arbol'
+}
 
 const getToday = (): Date => {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-};
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate())
+}
 
 const calculateNights = (from?: Date, to?: Date): number => {
-  if (!from || !to) return 0;
-  const diffTime = to.getTime() - from.getTime();
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-};
+  if (!from || !to) return 0
+  const diffTime = to.getTime() - from.getTime()
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+}
 
-const CalendarReservation = ({ onDateSelect }: Props) => {
-  const [range, setRange] = useState<DateRange | undefined>();
-  const [error, setError] = useState<string>('');
-  const [reservedDates, setReservedDates] = useState<Date[]>([]);
-  const [blockedDates, setBlockedDates] = useState<Date[]>([]);
+const sameDay = (a: Date, b: Date): boolean => {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  )
+}
+
+const CalendarReservation = ({ onDateSelect, cottageType }: Props) => {
+  const [range, setRange] = useState<DateRange | undefined>()
+  const [error, setError] = useState<string>('')
+  const [reservedDates, setReservedDates] = useState<Date[]>([])
+  const [blockedDates, setBlockedDates] = useState<Date[]>([])
 
   useEffect(() => {
     const loadDates = async () => {
-      const result = await fetchUnavailableDates();
+      const result = await fetchUnavailableDates(cottageType)
 
-      console.log(result.data);
       if (result.success) {
-        setReservedDates(result.data);
-        setBlockedDates(result.data);
+        setReservedDates(result.data)
+        setBlockedDates(result.data)
+        setError('')
       } else {
-        setError(result.message || 'Error cargando fechas');
+        setError(result.message || 'Error cargando fechas')
       }
-    };
+    }
 
-    loadDates();
-  }, []);
+    if (cottageType) {
+      loadDates()
+    }
+  }, [cottageType])
 
   const isDateUnavailable = (date: Date) => {
-    return [...reservedDates, ...blockedDates].some(
-      d => d.toDateString() === date.toDateString()
-    );
-  };
+    return [...reservedDates, ...blockedDates].some(d => sameDay(d, date))
+  }
 
   const isRangeValid = (from: Date, to: Date): boolean => {
-    let current = new Date(from);
+    let current = new Date(from)
     while (current <= to) {
-      if (isDateUnavailable(current)) return false;
-      current.setDate(current.getDate() + 1);
+      if (isDateUnavailable(current)) return false
+      current.setDate(current.getDate() + 1)
     }
-    return true;
-  };
+    return true
+  }
 
   const isRangeBeforeToday = (from: Date, to: Date): boolean => {
-    const today = getToday();
-    let current = new Date(from);
+    const today = getToday()
+    let current = new Date(from)
     while (current <= to) {
-      if (current < today) return true;
-      current.setDate(current.getDate() + 1);
+      if (current < today) return true
+      current.setDate(current.getDate() + 1)
     }
-    return false;
-  };
+    return false
+  }
 
   const handleSelect = (selectedRange: DateRange | undefined) => {
     if (!selectedRange?.from) {
-      setRange(undefined);
-      return;
+      setRange(undefined)
+      return
     }
 
-    const from = selectedRange.from;
-    let to = selectedRange.to ?? new Date(from);
+    const from = selectedRange.from
+    let to = selectedRange.to ?? new Date(from)
 
     if (from.toDateString() === to.toDateString()) {
-      to = new Date(from.getFullYear(), from.getMonth(), from.getDate() + 1);
+      to = new Date(from.getFullYear(), from.getMonth(), from.getDate() + 1)
     }
 
     if (isRangeBeforeToday(from, to)) {
-      setError('Selecionaste fechas pasadas.');
-      setRange(undefined);
-      return;
+      setError('Seleccionaste fechas pasadas.')
+      setRange(undefined)
+      return
     }
 
     if (!isRangeValid(from, to)) {
-      setError('El rango incluye fechas bloqueadas o reservadas.');
-      setRange(undefined);
-      return;
+      setError('El rango incluye fechas bloqueadas o reservadas.')
+      setRange(undefined)
+      return
     }
 
-    setError('');
-    setRange({ from, to });
+    setError('')
+    setRange({ from, to })
     onDateSelect({
       startDate: from.toISOString().split('T')[0],
       endDate: to.toISOString().split('T')[0],
-    });
-  };
+      numNights: calculateNights(from, to)
+    })
+  }
 
   const formatDisplayDate = (date: Date | undefined) =>
     date?.toLocaleDateString('es-CR', {
@@ -106,7 +116,7 @@ const CalendarReservation = ({ onDateSelect }: Props) => {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
-    });
+    })
 
   return (
     <div className="flex flex-col items-center">
@@ -165,7 +175,7 @@ const CalendarReservation = ({ onDateSelect }: Props) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CalendarReservation;
+export default CalendarReservation

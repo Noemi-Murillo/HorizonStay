@@ -34,10 +34,27 @@ const VerificationForm: React.FC<Props> = ({ onVerify, resetSignal }) => {
       setLoading(true);
       clearErrors();
 
-      const response = await fetch("/api/checkReservation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+    const response = await fetch('/api/checkReservation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(code)
+    });
+
+    const data = await response.json();
+    console.log(data)
+
+
+
+    if (data.ok) {
+      onVerify({
+        name: `${data.data.name}`,
+        cabin: `${data.data.cottage}`,
+        from: `${data.data.start}`,
+        to: `${data.data.end}`,
+        people: 4,
+        status:`${data.data.state}`,
+        ok:`${data.data.ok}`
+
       });
 
       const data = await response.json();

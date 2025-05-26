@@ -9,6 +9,7 @@ type ReservationData = {
   start: string
   notes?: string
   cottage?: string
+   guests: number 
 }
 
 export async function createData(reservationData: ReservationData) {

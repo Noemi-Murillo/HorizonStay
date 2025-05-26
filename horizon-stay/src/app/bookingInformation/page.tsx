@@ -12,16 +12,18 @@ const BookingInformation = () => {
   const [formReset, setFormReset] = useState(false);
 
   const handleVerify = (data: any) => {
-    if (data) {
-      setReservationData(data);
-      setVerified(true);
-      setNoMatch(false);
-    } else {
-      setReservationData(null);
-      setVerified(false);
-      setNoMatch(true);
-    }
-  };
+    console.log("valor ?",data.ok)
+  if (data.ok === "true") {
+    setReservationData(data);
+    setVerified(true);
+    setNoMatch(false);
+  } else {
+    setReservationData(null);
+    setVerified(false);
+    setNoMatch(true);
+  }
+};
+
 
   const handleReset = () => {
     setVerified(false);
