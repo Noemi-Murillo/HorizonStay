@@ -12,6 +12,8 @@ import { useRouter } from 'next/navigation'
 const ReservationForm = () => {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [totalPrice, setTotalPrice] = useState<number | null>(null)
+  const [numNights, setNumNights] = useState<number>(0)
 
   const {
     register,
@@ -41,6 +43,17 @@ const ReservationForm = () => {
   const getCottageCapacity = (id: string): number | null => {
     const prefix = id.substring(0, 6)
     return capacities[prefix] ?? null
+  }
+
+  const fetchCottagePrice = async (type: string): Promise<number | null> => {
+    try {
+      const res = await fetch(`/api/getPrice?type=${type}`)
+      const data = await res.json()
+      return data.price ?? null
+    } catch (error) {
+      console.error("Error al obtener precio:", error)
+      return null
+    }
   }
 
   const onSubmit = async (formData: ReservationData) => {
@@ -206,9 +219,19 @@ const ReservationForm = () => {
 
       {getCottageTypeFromId(cottageId) ? (
         <CalendarReservation
-          onDateSelect={(dates) => {
-            setValue("start", dates.startDate)
-            setValue("end", dates.endDate)
+          onDateSelect={async ({ startDate, endDate, numNights }) => {
+            setValue("start", startDate)
+            setValue("end", endDate)
+            setTotalPrice(null)
+            setNumNights(numNights)
+
+            const type = getCottageTypeFromId(cottageId)
+            if (type) {
+              const price = await fetchCottagePrice(type)
+              if (price !== null) {
+                setTotalPrice(price * numNights)
+              }
+            }
           }}
           cottageType={getCottageTypeFromId(cottageId)!}
         />
@@ -216,6 +239,12 @@ const ReservationForm = () => {
         <p className="text-center text-yellow-600 font-medium bg-yellow-100 rounded p-2">
           ⚠️ Primero debes seleccionar una cabaña para ver la disponibilidad.
         </p>
+      )}
+
+      {totalPrice !== null && (
+        <div className="bg-green-100 border border-green-400 text-green-800 p-3 rounded mt-2 text-center font-medium">
+          Total por {numNights} noche(s): ₡{totalPrice.toLocaleString()}
+        </div>
       )}
 
       <div>
