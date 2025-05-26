@@ -17,9 +17,46 @@ export default function Home() {
           </div>
         </section>
 
-      <section className="w-full py-16 px-8 sm:px-20 bg-gray-100">
-        <h2 className="text-3xl font-bold text-center mb-12">Nuestras Cabañas</h2>
-        <CabinList/>
+        <section className="w-full min-h-screen bg-green-50 py-16">
+        <div className="max-w-screen-xl mx-auto px-8 sm:px-20 flex flex-col md:flex-row items-start gap-10">
+          <div className="w-full md:w-1/3">
+            <h2 className="text-4xl font-bold mb-4">🌲 Cabañas en el Bosque</h2>
+            <p className="text-gray-700">
+              Escondites tranquilos rodeados de árboles, perfectos para relajarse lejos del ruido.
+            </p>
+          </div>
+          <div className="w-full md:w-2/3">
+            <CabinList type="forest" />
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full min-h-screen bg-blue-50 py-16">
+        <div className="max-w-screen-xl mx-auto px-8 sm:px-20 flex flex-col md:flex-row items-start gap-10">
+          <div className="w-full md:w-1/3">
+            <h2 className="text-4xl font-bold mb-4">🌊 Cabañas del Lago</h2>
+            <p className="text-gray-700">
+              Cabañas con impresionantes vistas al lago, ideales para una escapada tranquila de fin de semana.
+            </p>
+          </div>
+          <div className="w-full md:w-2/3">
+            <CabinList type="lake" />
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full min-h-screen bg-gray-50 py-16">
+        <div className="max-w-screen-xl mx-auto px-8 sm:px-20 flex flex-col md:flex-row items-start gap-10">
+          <div className="w-full md:w-1/3">
+            <h2 className="text-4xl font-bold mb-4">🏔️ Cabañas de Montaña</h2>
+            <p className="text-gray-700">
+              Escápate a las alturas. Descubre la serenidad de las cabañas de montaña, rodeadas de aire fresco y vistas panorámicas.
+            </p>
+          </div>
+          <div className="w-full md:w-2/3">
+            <CabinList type="mountain" />
+          </div>
+        </div>
       </section>
 
         <section className="w-full py-16 px-8 sm:px-20 bg-white">

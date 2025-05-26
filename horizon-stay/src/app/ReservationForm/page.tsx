@@ -1,65 +1,44 @@
 "use client"
 
-import React, { useState } from "react"
+import React from "react"
+import { Controller } from "react-hook-form"
+import { useReservationForm, ReservationData } from "@/hooks/useReservationForm"
 import SelectCottage from "@/components/reservationComponents/SelectCottage"
 import CalendarReservation from "@/components/reservationComponents/CalendarReservation"
 import ReservationButton from "@/components/reservationComponents/ReservationButton"
 import Swal from 'sweetalert2'
-import { useRouter } from 'next/navigation';
-
-type ReservationData = {
-  name: string
-  lastName: string
-  email: string
-  phone: string
-  end: string
-  start: string
-  notes?: string
-  cottage?: string
-}
+import { useRouter } from 'next/navigation'
 
 const ReservationForm = () => {
+  const router = useRouter()
 
-  const router = useRouter();
-  const [formData, setFormData] = useState<ReservationData>({
-    name: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    end: "",
-    start: "",
-    notes: "",
-    cottage: "",
-  })
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors }
+  } = useReservationForm()
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const onSubmit = async (formData: ReservationData) => {
     console.log("Reserva enviada:", formData)
 
     const response = await fetch('/api/createReservation', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
-    });
+    })
 
-    const data = await response.json();
-
+    const data = await response.json()
 
     if (data.ok) {
       const email = await fetch('/api/emailReservation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data.id)
-      });
+      })
 
-      const info = await email.json();
+      const info = await email.json()
 
       if (info.ok) {
         Swal.fire({
@@ -67,28 +46,24 @@ const ReservationForm = () => {
           text: `${data.message}`,
           icon: "success",
           timer: 3000,
-        });
+        })
 
         setTimeout(() => {
-          router.push('/bookingInformation');
-        }, 3000);
-
-
-
+          router.push('/bookingInformation')
+        }, 3000)
       } else {
         Swal.fire({
           title: "¡Fracaso!",
           text: `${data.error}`,
           icon: "warning"
-        });
+        })
       }
     }
-
   }
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="space-y-4 p-4 border rounded max-w-md mx-auto bg-white"
     >
       <h2 className="text-xl font-bold text-green-600">Reserva tu cabaña</h2>
@@ -96,74 +71,73 @@ const ReservationForm = () => {
       <div>
         <label className="block font-medium text-gray-700">Nombre</label>
         <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
+          {...register("name", { required: "El nombre es obligatorio" })}
           className="border p-2 rounded w-full text-gray-700"
-          required
         />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
       </div>
 
       <div>
         <label className="block font-medium text-gray-700">Apellidos</label>
         <input
-          type="text"
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
+          {...register("lastName", { required: "Los apellidos son obligatorios" })}
           className="border p-2 rounded w-full text-gray-700"
-          required
         />
+        {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
       </div>
 
       <div>
-        <label className="block font-medium text-gray-700">
-          Correo electrónico:
-        </label>
+        <label className="block font-medium text-gray-700">Correo electrónico</label>
         <input
           type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
+          {...register("email", {
+            required: "El correo es obligatorio",
+            pattern: {
+              value: /^\S+@\S+$/i,
+              message: "Correo inválido"
+            }
+          })}
           className="border p-2 rounded w-full text-gray-700"
-          required
         />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
       </div>
 
       <div>
-        <label className="block font-medium text-gray-700">Teléfono:</label>
+        <label className="block font-medium text-gray-700">Teléfono</label>
         <input
           type="tel"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
+          {...register("phone", { required: "El teléfono es obligatorio" })}
           className="border p-2 rounded w-full text-gray-700"
-          required
         />
+        {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
       </div>
 
-      <SelectCottage onChange={(cottage) => formData.cottage = cottage} />
+      <Controller
+        control={control}
+        name="cottage"
+        rules={{ required: "Debes seleccionar una cabaña" }}
+        render={({ field }) => (
+          <SelectCottage onChange={field.onChange} />
+        )}
+      />
+      {errors.cottage && <p className="text-red-500 text-sm">{errors.cottage.message}</p>}
 
-      <CalendarReservation onDateSelect={(dates) => (formData.end = dates.endDate) && (formData.start = dates.startDate)} />
+      <CalendarReservation
+        onDateSelect={(dates) => {
+          setValue("start", dates.startDate)
+          setValue("end", dates.endDate)
+        }}
+      />
 
       <div>
-
-      </div>
-
-      <div>
-        <label className="block font-medium text-gray-700">Notas (opcional):</label>
+        <label className="block font-medium text-gray-700">Notas (opcional)</label>
         <textarea
-          name="notes"
-          value={formData.notes}
-          onChange={handleChange}
+          {...register("notes")}
           placeholder="Especificaciones o comentarios..."
           className="border p-2 rounded w-full text-gray-700"
         />
       </div>
-
       <ReservationButton />
-
     </form>
   )
 }
