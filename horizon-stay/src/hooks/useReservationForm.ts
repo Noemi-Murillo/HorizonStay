@@ -5,6 +5,7 @@ export type ReservationData = {
   lastName: string
   email: string
   phone: string
+  guests: number,
   end: string
   start: string
   notes?: string

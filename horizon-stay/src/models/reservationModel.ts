@@ -10,7 +10,8 @@ type ReservationData = {
   end: string
   start: string
   notes?: string
-  cottage?: string
+  cottage?: string  // este será ahora el TIPO: "COT001"
+  guests: number
 }
 
 function generateCustomId(): string {
@@ -48,36 +49,64 @@ async function generateUniqueReserveNumber(): Promise<string> {
   } while (true)
 }
 
-export async function insertData(reservationData: ReservationData) {
-  const guestId = uuidv4()
-  const guestRef = ref(database, `app_data/guests/${guestId}`)
+function isDateOverlap(startA: string, endA: string, startB: string, endB: string): boolean {
+  return !(new Date(endA) < new Date(startB) || new Date(startA) > new Date(endB))
+}
 
-  await set(guestRef, {
+export async function insertData(reservationData: ReservationData) {
+  const reservationsSnap = await get(ref(database, 'app_data/reservations'))
+  const cottagesSnap = await get(ref(database, 'app_data/cottages'))
+
+  if (!cottagesSnap.exists()) {
+    throw new Error('No se encontraron cabañas registradas.')
+  }
+
+  const allCottages = cottagesSnap.val()
+  const reservations = reservationsSnap.exists() ? Object.values(reservationsSnap.val()) : []
+
+  const availableCottageId = Object.keys(allCottages).find(cottageId => {
+    // ❗ debe coincidir con el tipo base ("COT001", etc.)
+    if (!cottageId.startsWith(reservationData.cottage!)) return false
+
+    const isTaken = reservations.some((r: any) =>
+      r.cottage_id === cottageId &&
+      isDateOverlap(reservationData.start, reservationData.end, r.start, r.end)
+    )
+
+    return !isTaken
+  })
+
+  if (!availableCottageId) {
+    throw new Error('Todas las cabañas de este tipo ya están reservadas para esas fechas.')
+  }
+
+  // ✅ Crear huésped
+  const guestId = uuidv4()
+  await set(ref(database, `app_data/guests/${guestId}`), {
     name: reservationData.name + ' ' + reservationData.lastName,
     email: reservationData.email,
     phone: reservationData.phone,
     registration_date: new Date().toISOString(),
   })
 
+  // ✅ Crear reserva con cabaña disponible
   const reserveNumber = await generateUniqueReserveNumber()
-  const reservationRef = ref(database, `app_data/reservations/${reserveNumber}`)
-
-  await set(reservationRef, {
+  await set(ref(database, `app_data/reservations/${reserveNumber}`), {
     reserve_number: reserveNumber,
-    cottage_id: reservationData.cottage,
-    end: reservationData.end,
+    cottage_id: availableCottageId,
     start: reservationData.start,
+    end: reservationData.end,
     guest_id: guestId,
+    guests: reservationData.guests,
     notes: reservationData.notes || '',
     status: 'pendiente',
     total_price: 1000
   })
 
-  const reservationDetails = {
+  return {
     name: reservationData.name + ' ' + reservationData.lastName,
     email: reservationData.email,
-    reservationId: reserveNumber
+    reservationId: reserveNumber,
+    cottage_id: availableCottageId
   }
-
-  return reservationDetails
 }

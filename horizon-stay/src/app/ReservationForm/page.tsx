@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { Controller } from "react-hook-form"
 import { useReservationForm, ReservationData } from "@/hooks/useReservationForm"
 import SelectCottage from "@/components/reservationComponents/SelectCottage"
@@ -11,53 +11,115 @@ import { useRouter } from 'next/navigation'
 
 const ReservationForm = () => {
   const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
     register,
     handleSubmit,
     control,
+    watch,
     setValue,
     formState: { errors }
   } = useReservationForm()
 
+  const guests = watch("guests") || 0
+  const cottageId = watch("cottage") || ""
+
+  const capacities: Record<string, number> = {
+    "COT001": 4,
+    "COT002": 6,
+    "COT003": 8
+  }
+
+  const getCottageTypeFromId = (id: string): "lago" | "arbol" | "bosque" | null => {
+    if (id.startsWith("COT001")) return "lago"
+    if (id.startsWith("COT002")) return "arbol"
+    if (id.startsWith("COT003")) return "bosque"
+    return null
+  }
+
+  const getCottageCapacity = (id: string): number | null => {
+    const prefix = id.substring(0, 6)
+    return capacities[prefix] ?? null
+  }
+
   const onSubmit = async (formData: ReservationData) => {
-    console.log("Reserva enviada:", formData)
+    setIsSubmitting(true)
 
-    const response = await fetch('/api/createReservation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
+    try {
+      const prefix = formData.cottage?.substring(0, 6)
 
-    const data = await response.json()
+      if (!prefix || !capacities[prefix]) {
+        Swal.fire({
+          title: "Cabaña inválida",
+          text: `La cabaña seleccionada no es válida.`,
+          icon: "error"
+        })
+        return
+      }
 
-    if (data.ok) {
-      const email = await fetch('/api/emailReservation', {
+      const selectedCapacity = capacities[prefix]
+
+      if (formData.guests > selectedCapacity) {
+        Swal.fire({
+          title: "Capacidad excedida",
+          text: `La cabaña seleccionada solo admite hasta ${selectedCapacity} personas.`,
+          icon: "error"
+        })
+        return
+      }
+
+      const response = await fetch('/api/createReservation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data.id)
+        body: JSON.stringify(formData)
       })
 
-      const info = await email.json()
+      const data = await response.json()
 
-      if (info.ok) {
-        Swal.fire({
-          title: "¡Éxito!",
-          text: `${data.message}`,
-          icon: "success",
-          timer: 3000,
+      if (data.ok) {
+        const email = await fetch('/api/emailReservation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data.id)
         })
 
-        setTimeout(() => {
-          router.push('/bookingInformation')
-        }, 3000)
+        const info = await email.json()
+
+        if (info.ok) {
+          Swal.fire({
+            title: "¡Éxito!",
+            text: `${data.message}`,
+            icon: "success",
+            timer: 3000,
+          })
+
+          setTimeout(() => {
+            router.push('/bookingInformation')
+          }, 3000)
+        } else {
+          Swal.fire({
+            title: "¡Fracaso!",
+            text: `${data.error}`,
+            icon: "warning"
+          })
+        }
       } else {
         Swal.fire({
-          title: "¡Fracaso!",
-          text: `${data.error}`,
-          icon: "warning"
+          title: "Error",
+          text: data.error || "No se pudo completar la reserva.",
+          icon: "error"
         })
       }
+
+    } catch (error) {
+      Swal.fire({
+        title: "Error inesperado",
+        text: "Ocurrió un error al procesar la reserva.",
+        icon: "error"
+      })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -112,22 +174,49 @@ const ReservationForm = () => {
         {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
       </div>
 
+      <div>
+        <label className="block font-medium text-gray-700">Cantidad de personas</label>
+        <input
+          type="number"
+          min={1}
+          {...register("guests", {
+            required: "Debes indicar la cantidad de personas",
+            min: { value: 1, message: "Debe ser al menos 1 persona" }
+          })}
+          className="border p-2 rounded w-full text-gray-700"
+        />
+        {errors.guests && <p className="text-red-500 text-sm">{errors.guests.message}</p>}
+      </div>
+
       <Controller
         control={control}
         name="cottage"
         rules={{ required: "Debes seleccionar una cabaña" }}
         render={({ field }) => (
-          <SelectCottage onChange={field.onChange} />
+          <SelectCottage onChange={field.onChange} guests={guests} />
         )}
       />
       {errors.cottage && <p className="text-red-500 text-sm">{errors.cottage.message}</p>}
 
-      <CalendarReservation
-        onDateSelect={(dates) => {
-          setValue("start", dates.startDate)
-          setValue("end", dates.endDate)
-        }}
-      />
+      {getCottageCapacity(cottageId) && (
+        <p className="text-sm text-green-700 mb-2">
+          👉 La cabaña seleccionada admite hasta <strong>{getCottageCapacity(cottageId)}</strong> personas.
+        </p>
+      )}
+
+      {getCottageTypeFromId(cottageId) ? (
+        <CalendarReservation
+          onDateSelect={(dates) => {
+            setValue("start", dates.startDate)
+            setValue("end", dates.endDate)
+          }}
+          cottageType={getCottageTypeFromId(cottageId)!}
+        />
+      ) : (
+        <p className="text-center text-yellow-600 font-medium bg-yellow-100 rounded p-2">
+          ⚠️ Primero debes seleccionar una cabaña para ver la disponibilidad.
+        </p>
+      )}
 
       <div>
         <label className="block font-medium text-gray-700">Notas (opcional)</label>
@@ -137,7 +226,8 @@ const ReservationForm = () => {
           className="border p-2 rounded w-full text-gray-700"
         />
       </div>
-      <ReservationButton />
+
+      <ReservationButton disabled={isSubmitting} />
     </form>
   )
 }
