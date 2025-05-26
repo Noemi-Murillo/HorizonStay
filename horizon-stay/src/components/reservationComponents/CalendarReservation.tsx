@@ -6,7 +6,7 @@ import 'react-day-picker/dist/style.css'
 import { fetchUnavailableDates } from '@/controllers/datesController'
 
 type Props = {
-  onDateSelect: (range: { startDate: string; endDate: string }) => void
+  onDateSelect: (range: { startDate: string; endDate: string; numNights: number }) => void
   cottageType: 'lago' | 'bosque' | 'arbol'
 }
 
@@ -21,7 +21,6 @@ const calculateNights = (from?: Date, to?: Date): number => {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
 
-// ✅ Comparación segura de fechas
 const sameDay = (a: Date, b: Date): boolean => {
   return (
     a.getFullYear() === b.getFullYear() &&
@@ -107,6 +106,7 @@ const CalendarReservation = ({ onDateSelect, cottageType }: Props) => {
     onDateSelect({
       startDate: from.toISOString().split('T')[0],
       endDate: to.toISOString().split('T')[0],
+      numNights: calculateNights(from, to)
     })
   }
 

@@ -22,7 +22,6 @@ export default function Reservations() {
         });
 
         const data = await response.json();
-        console.log('prueba', data.data)
         if (!data.data || !data.data.cottages || !data.data.reservations) {
           console.error("Datos faltantes en la respuesta", data);
           return;
