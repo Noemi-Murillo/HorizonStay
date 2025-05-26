@@ -35,13 +35,13 @@ async function generateUniqueReserveNumber(): Promise<string> {
     }
 
     reserveNumber = generateCustomId()
-    const checkRef = ref(database, `reservations`)
+    const checkRef = ref(database, `app_data/reservations`)
     const snapshot = await get(checkRef)
 
     const exists = snapshot.exists()
       ? Object.values(snapshot.val()).some(
-        (r: any) => r.reserve_number === reserveNumber
-      )
+          (r: any) => r.reserve_number === reserveNumber
+        )
       : false
 
     if (!exists) return reserveNumber
@@ -50,7 +50,7 @@ async function generateUniqueReserveNumber(): Promise<string> {
 
 export async function insertData(reservationData: ReservationData) {
   const guestId = uuidv4()
-  const guestRef = ref(database, `guests/${guestId}`)
+  const guestRef = ref(database, `app_data/guests/${guestId}`)
 
   await set(guestRef, {
     name: reservationData.name + ' ' + reservationData.lastName,
@@ -60,22 +60,24 @@ export async function insertData(reservationData: ReservationData) {
   })
 
   const reserveNumber = await generateUniqueReserveNumber()
-  const reservationRef = ref(database, `reservations/${reserveNumber}`)
+  const reservationRef = ref(database, `app_data/reservations/${reserveNumber}`)
 
   await set(reservationRef, {
+    reserve_number: reserveNumber,
     cottage_id: reservationData.cottage,
     end: reservationData.end,
     start: reservationData.start,
     guest_id: guestId,
-    notes: reservationData.notes,
-    status: "pendiente",
+    notes: reservationData.notes || '',
+    status: 'pendiente',
     total_price: 1000
   })
-  var reservationDetails = {
+
+  const reservationDetails = {
     name: reservationData.name + ' ' + reservationData.lastName,
     email: reservationData.email,
     reservationId: reserveNumber
-    
   }
+
   return reservationDetails
 }

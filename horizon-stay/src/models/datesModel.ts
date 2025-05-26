@@ -17,11 +17,10 @@ function generateDateRange(start: string, end: string): Date[] {
   return dates;
 }
 
-
 export async function getBlockedAndReservedDates(): Promise<Date[]> {
   try {
-    const blocksRef = ref(database, 'blocks');
-    const reservationsRef = ref(database, 'reservations');
+    const blocksRef = ref(database, 'app_data/blocks');
+    const reservationsRef = ref(database, 'app_data/reservations');
 
     const [blocksSnap, reservationsSnap] = await Promise.all([
       get(blocksRef),

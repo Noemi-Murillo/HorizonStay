@@ -39,6 +39,8 @@ const VerificationForm = ({ onVerify, resetSignal }: Props) => {
         to: `${data.data.end}`,
         people: 4,
         status:`${data.data.state}`,
+        ok:`${data.data.ok}`
+
       });
     } else {
       onVerify(null);

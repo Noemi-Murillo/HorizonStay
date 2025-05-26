@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="flex h-screen">
       <aside className="w-64 bg-gray-100 p-4 border-r flex flex-col justify-between">
         <div>
-          <h2 className="text-xl font-bold mb-6">Panel Admin</h2>
+          <h2 className="text-xl font-bold mb-6">Panel Administrador</h2>
           <ul className="space-y-3">
             {menuItems.map((item) => (
               <li key={item.path}>
