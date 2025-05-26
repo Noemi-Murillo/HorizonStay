@@ -1,56 +1,39 @@
 import { database } from "@/lib/firebaseClient";
 import { ref, get } from "firebase/database";
-import { Console, log } from "node:console";
 
 export async function getReservationById(reservationId: string) {
   try {
-    const reference = ref(database, `reservations/${reservationId}`);
-    const snapshot = await get(reference);
-    console.log("ola")
-    if (!snapshot.exists()) {
-      return null; // or throw an error if you prefer
-    }
+    const reservationRef = ref(database, `reservations/${reservationId}`);
+    const reservationSnap = await get(reservationRef);
+    if (!reservationSnap.exists()) return null;
 
-    const reservation = snapshot.val(); // ✅ obtenés los datos reales
-    const guestId = reservation.guest_id; // ✅ accedés a la propiedad
+    const reservation = reservationSnap.val();
+    const guestId = reservation.guest_id;
+    const cottageId = reservation.cottage_id;
 
-    const idGuest = ref(database, `guests/${guestId}`);
-    const snapshot2 = await get(idGuest);
+    const guestSnap = await get(ref(database, `guests/${guestId}`));
+    const cottageSnap = await get(ref(database, `cottages/${cottageId}`));
 
-    if (!snapshot2.exists()) {
-      return null; // or throw an error if you prefer
-    }
+    if (!guestSnap.exists() || !cottageSnap.exists()) return null;
 
+    const guest = guestSnap.val();
+    const cottage = cottageSnap.val();
 
-    const cottage = snapshot.val(); // ✅ obtenés los datos reales
-    const cottageId = cottage.cottage_id; // ✅ accedés a la propiedad
-
-    const idCottage = ref(database, `cottages/${cottageId}`);
-    const snapshot3 = await get(idCottage);
-    console.log(snapshot.val())
-    console.log(snapshot2.val())
-    console.log(snapshot3.val())
-    if (!snapshot3.exists()) {
-      return null; // or throw an error if you prefer
-    }
-
-    var data = {
-      name: snapshot2.val().name,
-      cottage: snapshot3.val().name,
-      start: snapshot.val().start,
-      end: snapshot.val().end,
-      state: snapshot.val().status,
+    return {
+      name: guest.name,
+      email: guest.email,
+      phone: guest.phone,
+      cottage: cottage.name,
+      start: reservation.start,
+      end: reservation.end,
+      state: reservation.status,
+      guests: reservation.guests,
+      notes: reservation.notes,
+      total_price: reservation.total_price,
       ok: true
-    }
-    console.log(data)
-
-    return data;
+    };
   } catch (error) {
-    var data1 = {
-    
-      ok: false
-    }
     console.error("Error fetching reservation:", error);
-    throw new Error("Failed to fetch reservation.");
+    return { ok: false };
   }
 }

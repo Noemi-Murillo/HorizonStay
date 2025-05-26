@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 type VerificationData = {
@@ -18,8 +18,12 @@ const VerificationForm: React.FC<Props> = ({ onVerify, resetSignal }) => {
     register,
     handleSubmit,
     reset,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<VerificationData>();
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (resetSignal) reset();
@@ -27,21 +31,32 @@ const VerificationForm: React.FC<Props> = ({ onVerify, resetSignal }) => {
 
   const onSubmit = async (formData: VerificationData) => {
     try {
-      const response = await fetch("/api/verifyReservation", {
+      setLoading(true);
+      clearErrors();
+
+      const response = await fetch("/api/checkReservation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
-      if (response.ok && data.ok) {
+
+      if (response.ok && data.ok && data.reservation) {
+        // Validación exitosa
         onVerify(data.reservation);
       } else {
+        const msg = data?.error || "Código o correo incorrecto";
+        setError("reservationId", { type: "manual", message: msg });
+        setError("email", { type: "manual", message: msg });
         onVerify(null);
       }
     } catch (error) {
       console.error("Error al verificar la reserva:", error);
+      setError("reservationId", { type: "manual", message: "Ocurrió un error. Intenta de nuevo." });
       onVerify(null);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,9 +92,10 @@ const VerificationForm: React.FC<Props> = ({ onVerify, resetSignal }) => {
 
       <button
         type="submit"
-        className="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition"
+        disabled={loading}
+        className="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
       >
-        Verificar Reserva
+        {loading ? "Verificando..." : "Verificar Reserva"}
       </button>
     </form>
   );

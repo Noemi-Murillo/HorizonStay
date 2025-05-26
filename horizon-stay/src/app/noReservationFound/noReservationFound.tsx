@@ -29,7 +29,7 @@ const NoReservationFound = ({ onReset }: { onReset: () => void }) => {
         </div>
 
         <p>
-          <strong>Consejo:</strong> Verifica que el código, el nombre y la fecha de entrada estén escritos correctamente.
+          <strong>Consejo:</strong> Verifica que el código y email estén escritos correctamente.
         </p>
         <p className="text-sm text-gray-500 mt-4">
           Si el problema persiste, por favor contactá al personal de atención.
