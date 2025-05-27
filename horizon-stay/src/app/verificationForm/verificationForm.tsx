@@ -10,6 +10,7 @@ interface Props {
 
 const VerificationForm = ({ onVerify, resetSignal }: Props) => {
   const [code, setCode] = useState("");
+  const [guestName, setGuestName] = useState("");
 
   useEffect(() => {
     if (resetSignal) {
@@ -27,9 +28,8 @@ const VerificationForm = ({ onVerify, resetSignal }: Props) => {
     });
 
     const data = await response.json();
-    console.log(data)
-
-
+    console.log("RESERVATION DATA:", data);
+    console.log("DATA:", data.name);
 
     if (data.ok) {
       onVerify({
@@ -38,9 +38,8 @@ const VerificationForm = ({ onVerify, resetSignal }: Props) => {
         from: `${data.data.start}`,
         to: `${data.data.end}`,
         people: 4,
-        status:`${data.data.state}`,
-        ok:`${data.data.ok}`
-
+        status: `${data.data.state}`,
+        ok: `${data.data.ok}`
       });
     } else {
       onVerify(null);
@@ -49,14 +48,39 @@ const VerificationForm = ({ onVerify, resetSignal }: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-2xl font-bold mb-6 text-green-700 text-center">Consulta tu Reserva</h2>
+      <h2 className="text-2xl font-bold mb-6 text-green-700 text-center">
+        Consulta tu Reserva
+      </h2>
+
       <div>
-        <label htmlFor="code" className="block font-semibold text-gray-700 mb-1">Código de reserva</label>
+        <label
+          htmlFor="code"
+          className="block font-semibold text-gray-700 mb-1"
+        >
+          Código de reserva
+        </label>
         <input
           type="text"
           id="code"
           value={code}
           onChange={(e) => setCode(e.target.value)}
+          required
+          className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="guestName"
+          className="block font-semibold text-gray-700 mb-1"
+        >
+          Nombre completo (como fue registrado)
+        </label>
+        <input
+          type="text"
+          id="guestName"
+          value={guestName}
+          onChange={(e) => setGuestName(e.target.value)}
           required
           className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
         />
