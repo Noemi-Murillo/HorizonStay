@@ -1,11 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 interface Props {
   onVerify: (data: any) => void;
   resetSignal?: boolean;
+}
+
+function normalize(text: string): string {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 }
 
 const VerificationForm = ({ onVerify, resetSignal }: Props) => {
@@ -15,34 +19,64 @@ const VerificationForm = ({ onVerify, resetSignal }: Props) => {
   useEffect(() => {
     if (resetSignal) {
       setCode("");
+      setGuestName("");
     }
   }, [resetSignal]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch('/api/checkReservation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(code)
-    });
-
-    const data = await response.json();
-    console.log("RESERVATION DATA:", data);
-    console.log("DATA:", data.name);
-
-    if (data.ok) {
-      onVerify({
-        name: `${data.data.name}`,
-        cabin: `${data.data.cottage}`,
-        from: `${data.data.start}`,
-        to: `${data.data.end}`,
-        people: 4,
-        status: `${data.data.state}`,
-        ok: `${data.data.ok}`
+    try {
+      const response = await fetch("/api/checkReservation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(code),
       });
-    } else {
-      onVerify(null);
+
+      const data = await response.json();
+      console.log("RESERVATION DATA:", data);
+
+      if (data.ok) {
+        const inputName = normalize(guestName);
+        const storedName = normalize(data.data.name);
+
+        console.log("nombre", inputName);
+        console.log("nombre", storedName);
+
+        if (inputName === storedName) {
+          onVerify({
+            name: data.data.name,
+            email: data.data.email,
+            cabin: data.data.cottage,
+            from: data.data.start,
+            to: data.data.end,
+            people: data.data.guests,
+            status: data.data.state,
+            ok: true,
+          });
+        } else {
+          Swal.fire({
+            title: "Nombre incorrecto",
+            text: "El nombre ingresado no coincide con el registrado en la reservación.",
+            icon: "warning",
+          });
+          onVerify(null);
+        }
+      } else {
+        Swal.fire({
+          title: "Código no encontrado",
+          text: "No se encontró una reserva con ese código.",
+          icon: "error",
+        });
+        onVerify(null);
+      }
+    } catch (error) {
+      console.error("Error al verificar la reservación:", error);
+      Swal.fire({
+        title: "Error",
+        text: "Ocurrió un error al verificar la reserva.",
+        icon: "error",
+      });
     }
   };
 
@@ -53,10 +87,7 @@ const VerificationForm = ({ onVerify, resetSignal }: Props) => {
       </h2>
 
       <div>
-        <label
-          htmlFor="code"
-          className="block font-semibold text-gray-700 mb-1"
-        >
+        <label htmlFor="code" className="block font-semibold text-gray-700 mb-1">
           Código de reserva
         </label>
         <input
@@ -70,10 +101,7 @@ const VerificationForm = ({ onVerify, resetSignal }: Props) => {
       </div>
 
       <div>
-        <label
-          htmlFor="guestName"
-          className="block font-semibold text-gray-700 mb-1"
-        >
+        <label htmlFor="guestName" className="block font-semibold text-gray-700 mb-1">
           Nombre completo (como fue registrado)
         </label>
         <input

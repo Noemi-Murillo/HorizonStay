@@ -12,17 +12,22 @@ const BookingInformation = () => {
   const [formReset, setFormReset] = useState(false);
 
   const handleVerify = (data: any) => {
-    console.log("valor ?",data.ok)
-  if (data.ok === "true") {
-    setReservationData(data);
-    setVerified(true);
-    setNoMatch(false);
-  } else {
-    setReservationData(null);
-    setVerified(false);
-    setNoMatch(true);
-  }
-};
+    console.log("Resultado de la verificación:", data);
+
+    if (data && data.ok === true) {
+      setVerified(true);
+      setReservationData(data);
+      setNoMatch(false);
+    } else {
+      setVerified(false);
+      setReservationData(null);
+      setNoMatch(true);
+    }
+
+    // Reiniciar el formulario en ambos casos
+    setFormReset(true);
+    setTimeout(() => setFormReset(false), 100);
+  };
 
 
   const handleReset = () => {
@@ -56,3 +61,4 @@ const BookingInformation = () => {
 };
 
 export default BookingInformation;
+

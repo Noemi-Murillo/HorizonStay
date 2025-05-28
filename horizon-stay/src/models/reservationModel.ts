@@ -10,7 +10,7 @@ type ReservationData = {
   end: string
   start: string
   notes?: string
-  cottage?: string  // este será ahora el TIPO: "COT001"
+  cottage?: string  
   guests: number
 }
 
@@ -65,7 +65,7 @@ export async function insertData(reservationData: ReservationData) {
   const reservations = reservationsSnap.exists() ? Object.values(reservationsSnap.val()) : []
 
   const availableCottageId = Object.keys(allCottages).find(cottageId => {
-    // ❗ debe coincidir con el tipo base ("COT001", etc.)
+
     if (!cottageId.startsWith(reservationData.cottage!)) return false
 
     const isTaken = reservations.some((r: any) =>
@@ -80,7 +80,7 @@ export async function insertData(reservationData: ReservationData) {
     throw new Error('Todas las cabañas de este tipo ya están reservadas para esas fechas.')
   }
 
-  // ✅ Crear huésped
+
   const guestId = uuidv4()
   await set(ref(database, `app_data/guests/${guestId}`), {
     name: reservationData.name + ' ' + reservationData.lastName,
@@ -89,7 +89,7 @@ export async function insertData(reservationData: ReservationData) {
     registration_date: new Date().toISOString(),
   })
 
-  // ✅ Crear reserva con cabaña disponible
+
   const reserveNumber = await generateUniqueReserveNumber()
   await set(ref(database, `app_data/reservations/${reserveNumber}`), {
     reserve_number: reserveNumber,
