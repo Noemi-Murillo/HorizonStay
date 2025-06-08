@@ -102,3 +102,18 @@
   margin-left: 0;
   margin-right: 0;
 }
+
+
+/* Oculta las etiquetas de hora en el timeline (segunda fila horizontal) */
+.fc-timeline-header-row fc-timeline-header-row-chrono{
+
+
+color: #FFF !important;
+
+
+}
+
+body > main > div > main > div > div > div.fc-view-harness.fc-view-harness-active > div.fc-resourceTimelineMonth-view.fc-view.fc-resource-timeline.fc-resource-timeline-flat.fc-timeline.fc-timeline-overlap-enabled > table > thead > tr > th:nth-child(3) > div > div > div > table > tbody > tr.fc-timeline-header-row.fc-timeline-header-row-chrono{
+
+  color: #FFF !important;
+}
