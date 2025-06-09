@@ -132,20 +132,15 @@ export default function Reservations() {
 
           await Swal.fire('Guardado', 'La reservación fue actualizada correctamente.', 'success');
 
-
-
         } else {
-
 
           await Swal.fire('Error', 'La reservación no pudo ser actualizada', 'warning');
 
         }
 
 
-
-
       } catch (error) {
-
+        console.error('Error:', error);
       }
 
 
@@ -172,7 +167,6 @@ export default function Reservations() {
         onSubmit={async (start, end, cottageId, description) => {
           console.log("Intentando crear bloqueo:", { start, end, cottageId, description });
 
-          // ✅ Validar si ya existe un evento en ese rango para esa cabaña
           const overlapExists = events.some((event) => {
             const isSameCottage = event.resourceId === cottageId;
 
@@ -191,7 +185,7 @@ export default function Reservations() {
             return;
           }
 
-      
+
           const response = await fetch('/api/createBlock', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -210,7 +204,7 @@ export default function Reservations() {
           }
         }}
       />
-      
+
 
 
       <button className="bg-green-600 hover:bg-green-700 transition px-8 py-3 my-5  mr-[35px] rounded-full text-white text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>

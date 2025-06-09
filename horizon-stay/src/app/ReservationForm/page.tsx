@@ -103,12 +103,7 @@ const ReservationForm = () => {
         body: JSON.stringify(formData)
       })
 
-      console.log("TOTAL PRICE ENVIADO:", formData.total_price)
-      console.log("TOTAL PRICE ENVIADO:", formData)
-
-
       const data = await response.json()
-
 
       if (data.ok) {
         const email = await fetch('/api/emailReservation', {
