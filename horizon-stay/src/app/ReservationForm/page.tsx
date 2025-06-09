@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { Controller } from "react-hook-form"
 import { useReservationForm, ReservationData } from "@/hooks/useReservationForm"
 import SelectCottage from "@/components/reservationComponents/SelectCottage"
-import CalendarReservation from "@/components/reservationComponents/CalendarReservation"
+import CalendarReservation from "@/components/calendarComponents/CalendarReservation"
 import ReservationButton from "@/components/reservationComponents/ReservationButton"
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/navigation'

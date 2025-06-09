@@ -15,9 +15,6 @@ export async function getReservations() {
         const cottages = appData.cottages || {};
         const reservations = appData.reservations || {};
 
-        console.log('rr', cottages)
-        console.log('bb', reservations)
-
         return {
             cottages,
             reservations

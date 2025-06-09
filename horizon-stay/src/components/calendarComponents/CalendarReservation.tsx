@@ -4,60 +4,48 @@ import { useEffect, useState } from 'react'
 import { DayPicker, DateRange } from 'react-day-picker'
 import 'react-day-picker/dist/style.css'
 import { fetchUnavailableDates } from '@/controllers/datesController'
+import { getToday, calculateNights, sameDay, isRangeBeforeToday } from '@/utils/calendarUtils'
+import SelectedDateInfo from './selectedDateInfo'
 
 type Props = {
   onDateSelect: (range: { startDate: string; endDate: string; numNights: number }) => void
   cottageType: 'lago' | 'bosque' | 'arbol'
 }
 
-const getToday = (): Date => {
-  const now = new Date()
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate())
-}
-
-const calculateNights = (from?: Date, to?: Date): number => {
-  if (!from || !to) return 0
-  const diffTime = to.getTime() - from.getTime()
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-}
-
-const sameDay = (a: Date, b: Date): boolean => {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  )
-}
-
 const CalendarReservation = ({ onDateSelect, cottageType }: Props) => {
-  const [range, setRange] = useState<DateRange | undefined>()
-  const [error, setError] = useState<string>('')
+  const [range, setRange] = useState<DateRange>()
+  const [error, setError] = useState('')
   const [reservedDates, setReservedDates] = useState<Date[]>([])
-  const [blockedDates, setBlockedDates] = useState<Date[]>([])
 
   useEffect(() => {
     const loadDates = async () => {
-      const result = await fetchUnavailableDates(cottageType)
+      try {
+        const response = await fetch('/api/getBlockedDates')
+        const result = await response.json()
+        console.log("Fechas RESULT:", result)
 
-      if (result.success) {
-        setReservedDates(result.data)
-        setBlockedDates(result.data)
-        setError('')
-      } else {
-        setError(result.message || 'Error cargando fechas')
+        if (result.ok) {
+          const blocked = result.data.blockedDates[cottageType] || []
+          const parsedDates = blocked.map((d: string) => new Date(d))
+          console.log("Fechas bloqueadas:", parsedDates)
+          setReservedDates(parsedDates)
+          setError('')
+        } else {
+          setError(result.error || 'Error cargando fechas')
+        }
+      } catch (error) {
+        console.error('Error al cargar fechas bloqueadas:', error)
+        setError('No se pudieron obtener las fechas.')
       }
     }
 
-    if (cottageType) {
-      loadDates()
-    }
+    if (cottageType) loadDates()
   }, [cottageType])
 
-  const isDateUnavailable = (date: Date) => {
-    return [...reservedDates, ...blockedDates].some(d => sameDay(d, date))
-  }
+  const isDateUnavailable = (date: Date) =>
+    reservedDates.some(d => sameDay(d, date))
 
-  const isRangeValid = (from: Date, to: Date): boolean => {
+  const isRangeValid = (from: Date, to: Date) => {
     let current = new Date(from)
     while (current <= to) {
       if (isDateUnavailable(current)) return false
@@ -66,21 +54,8 @@ const CalendarReservation = ({ onDateSelect, cottageType }: Props) => {
     return true
   }
 
-  const isRangeBeforeToday = (from: Date, to: Date): boolean => {
-    const today = getToday()
-    let current = new Date(from)
-    while (current <= to) {
-      if (current < today) return true
-      current.setDate(current.getDate() + 1)
-    }
-    return false
-  }
-
   const handleSelect = (selectedRange: DateRange | undefined) => {
-    if (!selectedRange?.from) {
-      setRange(undefined)
-      return
-    }
+    if (!selectedRange?.from) return setRange(undefined)
 
     const from = selectedRange.from
     let to = selectedRange.to ?? new Date(from)
@@ -91,14 +66,12 @@ const CalendarReservation = ({ onDateSelect, cottageType }: Props) => {
 
     if (isRangeBeforeToday(from, to)) {
       setError('Seleccionaste fechas pasadas.')
-      setRange(undefined)
-      return
+      return setRange(undefined)
     }
 
     if (!isRangeValid(from, to)) {
       setError('El rango incluye fechas bloqueadas o reservadas.')
-      setRange(undefined)
-      return
+      return setRange(undefined)
     }
 
     setError('')
@@ -109,14 +82,6 @@ const CalendarReservation = ({ onDateSelect, cottageType }: Props) => {
       numNights: calculateNights(from, to)
     })
   }
-
-  const formatDisplayDate = (date: Date | undefined) =>
-    date?.toLocaleDateString('es-CR', {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    })
 
   return (
     <div className="flex flex-col items-center">
@@ -130,13 +95,9 @@ const CalendarReservation = ({ onDateSelect, cottageType }: Props) => {
           fromDate={getToday()}
           numberOfMonths={1}
           showOutsideDays
-          disabled={[...reservedDates, ...blockedDates]}
-          modifiers={{
-            blocked: blockedDates,
-            reserved: reservedDates,
-          }}
+          disabled={reservedDates}
+          modifiers={{ reserved: reservedDates }}
           modifiersClassNames={{
-            blocked: 'bg-red-200 text-red-700 line-through',
             reserved: 'bg-yellow-200 text-yellow-800 line-through',
             selected: 'bg-green-600 text-white rounded-full',
             range_middle: 'bg-green-100 text-green-900',
@@ -154,19 +115,10 @@ const CalendarReservation = ({ onDateSelect, cottageType }: Props) => {
       </div>
 
       {range?.from && (
-        <div className="text-sm text-gray-700 text-center mt-2">
-          ✅ Fechas seleccionadas: <strong>{formatDisplayDate(range.from)}</strong> a{' '}
-          <strong>
-            {formatDisplayDate(range.to) ??
-              formatDisplayDate(new Date(range.from.getTime() + 86400000))}
-          </strong>
-        </div>
-      )}
-
-      {range?.to && (
-        <div className="mt-1 text-green-700">
-          🛏️ {calculateNights(range.from, range.to)} noche(s)
-        </div>
+        <SelectedDateInfo
+          range={range}
+          nights={calculateNights(range.from, range.to)}
+        />
       )}
 
       {error && (
