@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import { ref, get, set } from "firebase/database"
 import { database } from "@/lib/firebaseClient"
+import Swal from "sweetalert2"
 
 type CottagePrice = {
   type_id: string
@@ -16,10 +17,10 @@ type Props = {
   onClose: () => void
 }
 
-
 export default function PriceManagementModal({ isOpen, onClose }: Props) {
   const [prices, setPrices] = useState<CottagePrice[]>([])
   const [loading, setLoading] = useState(false)
+  const [edits, setEdits] = useState<Record<string, number>>({})
 
   useEffect(() => {
     if (isOpen) {
@@ -27,7 +28,6 @@ export default function PriceManagementModal({ isOpen, onClose }: Props) {
       fetchPrices().finally(() => setLoading(false))
     }
   }, [isOpen])
-
 
   const fetchPrices = async () => {
     const snap = await get(ref(database, "app_data/cottage_types"))
@@ -38,25 +38,54 @@ export default function PriceManagementModal({ isOpen, onClose }: Props) {
       price_per_night: value.price_per_night
     }))
     setPrices(result)
+
+    // Inicializa el estado de edición
+    const initialEdits: Record<string, number> = {}
+    result.forEach((item) => {
+      initialEdits[item.type_id] = item.price_per_night
+    })
+    setEdits(initialEdits)
+  }
+
+  const handleInputChange = (type_id: string, value: number) => {
+    setEdits(prev => ({
+      ...prev,
+      [type_id]: value
+    }))
+  }
+
+  const handleSaveAll = async () => {
+    const confirm = await Swal.fire({
+      title: '¿Guardar cambios?',
+      text: '¿Deseas actualizar los precios editados?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, guardar',
+      cancelButtonText: 'Cancelar'
+    })
+
+    if (!confirm.isConfirmed) return
+
+    setLoading(true)
+
+    for (const [type_id, value] of Object.entries(edits)) {
+      await set(ref(database, `app_data/cottage_types/${type_id}/price_per_night`), value)
+    }
+
+    await fetchPrices()
+    setLoading(false)
+
+    Swal.fire('Actualizado', 'Los precios fueron actualizados con éxito.', 'success')
   }
 
   const handleIAUpdate = async () => {
     setLoading(true)
     const res = await fetch("/api/updatePrices")
-    const json = await res.json()
-    if (res.ok) {
-      await fetchPrices()
-    }
+    if (res.ok) await fetchPrices()
     setLoading(false)
   }
 
-  const handleManualChange = async (type_id: string, price: number) => {
-    await set(ref(database, `app_data/cottage_types/${type_id}/price_per_night`), price)
-    await fetchPrices()
-  }
-
   if (!isOpen) return null
-
 
   if (loading) {
     return createPortal(
@@ -73,7 +102,6 @@ export default function PriceManagementModal({ isOpen, onClose }: Props) {
     )
   }
 
-
   return createPortal(
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 space-y-4 relative">
@@ -85,20 +113,20 @@ export default function PriceManagementModal({ isOpen, onClose }: Props) {
             <tr>
               <th>Tipo</th>
               <th>Precio actual (₡)</th>
-              <th>Editar</th>
+              <th>Nuevo precio (₡)</th>
             </tr>
           </thead>
           <tbody>
             {prices.map(p => (
               <tr key={p.type_id} className="border-b">
                 <td className="py-2">{p.name}</td>
-                <td className="py-2">{p.price_per_night.toLocaleString()}</td>
+                <td className="py-2">₡{p.price_per_night.toLocaleString()}</td>
                 <td className="py-2">
                   <input
                     type="number"
-                    defaultValue={p.price_per_night}
-                    className="border rounded px-2 py-1 w-24"
-                    onBlur={e => handleManualChange(p.type_id, Number(e.target.value))}
+                    value={edits[p.type_id]}
+                    className="border rounded px-2 py-1 w-28"
+                    onChange={e => handleInputChange(p.type_id, Number(e.target.value))}
                   />
                 </td>
               </tr>
@@ -106,13 +134,22 @@ export default function PriceManagementModal({ isOpen, onClose }: Props) {
           </tbody>
         </table>
 
-        <button
-          onClick={handleIAUpdate}
-          disabled={loading}
-          className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-        >
-          {loading ? "Actualizando con IA..." : "Actualizar automáticamente con IA"}
-        </button>
+        <div className="flex gap-4 pt-4">
+          <button
+            onClick={handleSaveAll}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Guardar cambios
+          </button>
+
+          <button
+            onClick={handleIAUpdate}
+            disabled={loading}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          >
+            {loading ? "Actualizando con IA..." : "Actualizar automáticamente con IA"}
+          </button>
+        </div>
       </div>
     </div>,
     document.body

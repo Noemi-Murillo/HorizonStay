@@ -214,6 +214,7 @@ export default function Reservations() {
           });
           if (response.ok) {
             Swal.fire('¡Éxito!', 'Se ha guardado el bloqueo exitosamente.', 'success');
+            setTimeout(() => window.location.reload(), 1900);
           } else {
             Swal.fire('Error', 'No se pudo guardar el bloqueo.', 'warning');
           }
