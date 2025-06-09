@@ -167,20 +167,15 @@ export default function Reservations() {
 
           await Swal.fire('Guardado', 'La reservación fue actualizada correctamente.', 'success');
 
-
-
         } else {
-
 
           await Swal.fire('Error', 'La reservación no pudo ser actualizada', 'warning');
 
         }
 
 
-
-
       } catch (error) {
-
+        console.error('Error:', error);
       }
 
 

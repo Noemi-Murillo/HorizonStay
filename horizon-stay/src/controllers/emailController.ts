@@ -1,10 +1,10 @@
 import { sendReservationEmail } from '@/models/emailModel';
-import {  logoHorizonStay , placeImage } from '@/utils/emailImages'
+import { logoHorizonStay, placeImage } from '@/utils/emailImages'
 import { ReservationData } from "@/hooks/useReservationForm"
 
-export async function  notifyClient(reservationData: ReservationData) {
+export async function notifyClient(reservationData: ReservationData) {
 
-    const html = `
+  const html = `
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -37,7 +37,12 @@ export async function  notifyClient(reservationData: ReservationData) {
     <p><strong>Check-in:</strong> ${reservationData.start}</p>
     <p><strong>Check-out:</strong> ${reservationData.end}</p>
     <p><strong>Cabaña:</strong> ${reservationData.cottageName}</p>
+    <p><strong>Precio total:</strong> ${reservationData.total_price}</p>
 
+    <div style="text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 12px;">
+      <p>¡Gracias por tu reserva! Nos pondremos en contacto contigo unos días antes de tu llegada para coordinar el pago y asegurarnos de que todo esté listo para tu estadía.</p>
+      
+   </div>
     <!-- Botón -->
     <div style="text-align: center; margin-top: 60px;">
       <a href="https://www.horizonstay.com" target="_blank" style="background-color: #105c49; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
@@ -57,5 +62,5 @@ export async function  notifyClient(reservationData: ReservationData) {
 
 `
 
-    return sendReservationEmail(reservationData, 'Confirmación de reserva.', html);
+  return sendReservationEmail(reservationData, 'Confirmación de reserva.', html);
 }
