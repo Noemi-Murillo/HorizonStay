@@ -161,7 +161,7 @@ export default function Reservations() {
   };
 
   return (
-    <div>
+    <div className="max-w-[1400px] mx-auto p-4">
       <h1 className="text-2xl font-bold prueba">Reservaciones</h1>
       <p className="mt-2 text-gray-600">Mantenimiento de reservaciones</p>
 
@@ -191,7 +191,7 @@ export default function Reservations() {
             return;
           }
 
-      
+
           const response = await fetch('/api/createBlock', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -210,7 +210,7 @@ export default function Reservations() {
           }
         }}
       />
-      
+
 
 
       <button className="bg-green-600 hover:bg-green-700 transition px-8 py-3 my-5  mr-[35px] rounded-full text-white text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>
