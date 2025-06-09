@@ -7,9 +7,9 @@ const WhyChooseUs = () => {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
         <div>
           <img
-            src="/icons/nature.svg"
+            src="\experiences\nature2.webp"
             alt="Naturaleza"
-            className="w-16 h-16 mx-auto mb-4"
+            className="w-30 h-40 mx-auto mb-4"
           />
           <h4 className="text-lg font-semibold mb-2">Ubicación Privilegiada</h4>
           <p className="text-gray-600 text-sm">
@@ -18,9 +18,9 @@ const WhyChooseUs = () => {
         </div>
         <div>
           <img
-            src="/icons/fireplace.svg"
+            src="\experiences\fireplace.webp"
             alt="Acogedora"
-            className="w-16 h-16 mx-auto mb-4"
+            className="w-30 h-40 mx-auto mb-4"
           />
           <h4 className="text-lg font-semibold mb-2">Ambiente Acogedor</h4>
           <p className="text-gray-600 text-sm">
@@ -29,18 +29,18 @@ const WhyChooseUs = () => {
         </div>
         <div>
           <img
-            src="/icons/wifi.svg"
+            src="/experiences/wifi.webp"
             alt="Wifi"
-            className="w-16 h-16 mx-auto mb-4"
+            className="w-30 h-40 mx-auto mb-4"
           />
           <h4 className="text-lg font-semibold mb-2">Conectividad</h4>
           <p className="text-gray-600 text-sm">WiFi incluido en todas nuestras cabañas.</p>
         </div>
         <div>
           <img
-            src="/icons/pet.svg"
+            src="/experiences/pet.webp"
             alt="Pet Friendly"
-            className="w-16 h-16 mx-auto mb-4"
+            className="w-30 h-40 mx-auto mb-4"
           />
           <h4 className="text-lg font-semibold mb-2">Pet Friendly</h4>
           <p className="text-gray-600 text-sm">Tu mascota es bienvenida sin cargos extra.</p>

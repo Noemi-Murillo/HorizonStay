@@ -1,10 +1,10 @@
-"use client"
+'use client'
 
 import React, { useState } from "react"
 import { Controller } from "react-hook-form"
 import { useReservationForm, ReservationData } from "@/hooks/useReservationForm"
 import SelectCottage from "@/components/reservationComponents/SelectCottage"
-import CalendarReservation from "@/components/reservationComponents/CalendarReservation"
+import CalendarReservation from "@/components/calendarComponents/CalendarReservation"
 import ReservationButton from "@/components/reservationComponents/ReservationButton"
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/navigation'
@@ -56,6 +56,14 @@ const ReservationForm = () => {
     }
   }
 
+  const formatWithTime = (dateStr: string, hour: string): string => {
+    const [year, month, day] = dateStr.split("-").map(Number)
+    const date = new Date(year, month - 1, day)
+    const [h, m] = hour.split(":").map(Number)
+    date.setHours(h, m, 0, 0)
+    return date.toISOString()
+  }
+
   const onSubmit = async (formData: ReservationData) => {
     setIsSubmitting(true)
 
@@ -81,6 +89,13 @@ const ReservationForm = () => {
         })
         return
       }
+
+      formData.start = formatWithTime(formData.start, "12:00")
+      formData.end = formatWithTime(formData.end, "12:00")
+      formData.total_price = totalPrice ?? 0
+
+
+
 
       const response = await fetch('/api/createReservation', {
         method: 'POST',
@@ -113,7 +128,7 @@ const ReservationForm = () => {
         } else {
           Swal.fire({
             title: "¡Fracaso!",
-            text: `${data.error}`,
+            text: `${info.error}`,
             icon: "warning"
           })
         }
@@ -139,25 +154,19 @@ const ReservationForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 p-4 border rounded max-w-md mx-auto bg-white"
+      className="space-y-4 border rounded max-w-md mx-auto mt-20 mb-10 max-w-md mx-auto p-8 shadow-xl border-gray-200 bg-white"
     >
       <h2 className="text-xl font-bold text-green-600">Reserva tu cabaña</h2>
 
       <div>
         <label className="block font-medium text-gray-700">Nombre</label>
-        <input
-          {...register("name", { required: "El nombre es obligatorio" })}
-          className="border p-2 rounded w-full text-gray-700"
-        />
+        <input {...register("name", { required: "El nombre es obligatorio" })} className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150" />
         {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
       </div>
 
       <div>
         <label className="block font-medium text-gray-700">Apellidos</label>
-        <input
-          {...register("lastName", { required: "Los apellidos son obligatorios" })}
-          className="border p-2 rounded w-full text-gray-700"
-        />
+        <input {...register("lastName", { required: "Los apellidos son obligatorios" })} className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150" />
         {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
       </div>
 
@@ -172,7 +181,7 @@ const ReservationForm = () => {
               message: "Correo inválido"
             }
           })}
-          className="border p-2 rounded w-full text-gray-700"
+          className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150"
         />
         {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
       </div>
@@ -182,7 +191,7 @@ const ReservationForm = () => {
         <input
           type="tel"
           {...register("phone", { required: "El teléfono es obligatorio" })}
-          className="border p-2 rounded w-full text-gray-700"
+          className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150"
         />
         {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
       </div>
@@ -196,7 +205,7 @@ const ReservationForm = () => {
             required: "Debes indicar la cantidad de personas",
             min: { value: 1, message: "Debe ser al menos 1 persona" }
           })}
-          className="border p-2 rounded w-full text-gray-700"
+          className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150"
         />
         {errors.guests && <p className="text-red-500 text-sm">{errors.guests.message}</p>}
       </div>
@@ -206,9 +215,17 @@ const ReservationForm = () => {
         name="cottage"
         rules={{ required: "Debes seleccionar una cabaña" }}
         render={({ field }) => (
-          <SelectCottage onChange={field.onChange} guests={guests} />
+          <SelectCottage
+            value={field.value}
+            guests={guests}
+            onChange={({ value, label }) => {
+              field.onChange(value)
+              setValue("cottageName", label)
+            }}
+          />
         )}
       />
+
       {errors.cottage && <p className="text-red-500 text-sm">{errors.cottage.message}</p>}
 
       {getCottageCapacity(cottageId) && (
@@ -222,21 +239,22 @@ const ReservationForm = () => {
           onDateSelect={async ({ startDate, endDate, numNights }) => {
             setValue("start", startDate)
             setValue("end", endDate)
-            setTotalPrice(null)
             setNumNights(numNights)
 
             const type = getCottageTypeFromId(cottageId)
             if (type) {
               const price = await fetchCottagePrice(type)
               if (price !== null) {
-                setTotalPrice(price * numNights)
+                const finalPrice = price * numNights
+                setTotalPrice(finalPrice)
+                setValue("total_price", finalPrice)
               }
             }
           }}
           cottageType={getCottageTypeFromId(cottageId)!}
         />
       ) : (
-        <p className="text-center text-yellow-600 font-medium bg-yellow-100 rounded p-2">
+        <p className="text-center text-yellow-600 font-medium rounded p-2">
           ⚠️ Primero debes seleccionar una cabaña para ver la disponibilidad.
         </p>
       )}
@@ -252,7 +270,7 @@ const ReservationForm = () => {
         <textarea
           {...register("notes")}
           placeholder="Especificaciones o comentarios..."
-          className="border p-2 rounded w-full text-gray-700"
+          className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150"
         />
       </div>
 

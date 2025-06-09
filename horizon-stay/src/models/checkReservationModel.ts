@@ -3,45 +3,49 @@ import { ref, get } from "firebase/database";
 
 export async function getReservationById(reservationId: string) {
   try {
-    const reservationRef = ref(database, `app_data/`);
-    const reservationSnap = await get(reservationRef);
+    const reservationRef = ref(database, `app_data`);
+    const snapshot = await get(reservationRef);
 
-    if (!reservationSnap.exists()) {
+    if (!snapshot.exists()) {
+
       return null;
     }
 
-    const appData = reservationSnap.val();
+    const appData = snapshot.val();
 
     const reservation = appData.reservations?.[reservationId];
     if (!reservation) {
-      return { ok: false, message: "Reserva no encontrada" };
+
+      return null;
     }
 
-    const guestId = reservation.guest_id;
 
-    const guest = appData.guests?.[guestId];
+    const guest = appData.guests?.[reservation.guest_id];
     if (!guest) {
-      return { ok: false, message: "Huésped no encontrado" };
+
+      return null;
     }
 
     const cottage = appData.cottages?.[reservation.cottage_id];
-    const cottageName = cottage?.name || "Cabaña no encontrada";
+    if (!cottage) {
 
-    const data = {
-      guestId: guestId,
-      name: guest.name,
-      cottageId: reservation.cottage_id,
-      cottage: cottageName,
-      start: reservation.start,
-      end: reservation.end,
-      state: reservation.status,
-      ok: true
+      return null;
     }
 
+    const result = {
+      name: guest.name,
+      email: guest.email,
+      cottage: cottage.name,
+      start: reservation.start,
+      end: reservation.end,
+      guests: reservation.guests,
+      state: reservation.status,
+      ok: true
+    };
 
-    return data;
+    return result;
+
   } catch (error) {
-    console.error("Error fetching reservation:", error);
-    return { ok: false };
+    return null;
   }
 }

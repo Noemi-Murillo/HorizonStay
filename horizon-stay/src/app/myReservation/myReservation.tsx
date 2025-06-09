@@ -15,9 +15,7 @@ const MyReservation = ({ data }: { data: any }) => {
         <p><strong>Estado:</strong> {data.status}</p>
       </div>
       <div className="mt-6 text-center">
-        <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-xl shadow">
-          Modificar reserva
-        </button>
+        <p>Si deseas realizar cambios en tu reservación, no dudes en contactarnos a través del correo electrónico: horizon.stay.complex@gmail.com.</p>
       </div>
     </>
   );

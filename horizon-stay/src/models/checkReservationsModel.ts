@@ -3,21 +3,36 @@ import { ref, get } from "firebase/database";
 
 export async function getReservations() {
     try {
-        const reservationRef = ref(database, `app_data/`);
-        const reservationSnap = await get(reservationRef);
+        const appDataRef = ref(database, `app_data/`);
+        const snapshot = await get(appDataRef);
 
-        if (!reservationSnap.exists()) {
+        if (!snapshot.exists()) {
             return { cottages: {}, reservations: {} };
         }
 
-        const appData = reservationSnap.val();
+        const appData = snapshot.val();
 
         const cottages = appData.cottages || {};
-        const reservations = appData.reservations || {};
+        const reservationsRaw = appData.reservations || {};
+        const guests = appData.guests || {};
 
-        console.log('rr', cottages)
-        console.log('bb', reservations)
+        const reservations = Object.entries(reservationsRaw).reduce(
+            (acc, [id, res]: [string, any]) => {
+                const guestInfo = guests[res.guest_id] || {};
 
+                acc[id] = {
+                    ...res,
+                    name: guestInfo.name || '',
+                    phone: guestInfo.phone || '',
+                    email: guestInfo.email || '',
+                    registration_date: guestInfo.registration_date || ''
+                };
+
+                return acc;
+            },
+            {} as Record<string, any>
+        );
+        console.log(reservations)
         return {
             cottages,
             reservations
