@@ -16,7 +16,7 @@ export async function getBlockEvents() {
   const blockEvents = Object.entries(blocks).map(
     ([id, value]: [string, any]) => ({
       id: value.cottageId,
-      title: value.notes || 'Bloqueo',
+      title: value.description || 'Bloqueo',
       start: value.start,
       end: value.end,
       resourceId: value.cottageId,
