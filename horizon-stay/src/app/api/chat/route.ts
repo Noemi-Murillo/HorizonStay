@@ -6,13 +6,23 @@ export async function POST(req: NextRequest) {
     const { message } = await req.json();
 
     if (!message || typeof message !== 'string') {
-      return NextResponse.json({ response: 'Mensaje inválido.' }, { status: 400 });
+      return NextResponse.json(
+        { response: 'Mensaje inválido.' },
+        { status: 400 } // ✅ segundo argumento obligatorio si quieres usar status
+      );
     }
 
-    const response = getBotResponse(message);
-    return NextResponse.json({ response });
+    const response = await getBotResponse(message);
+
+    return NextResponse.json(
+      { response }, // ✅ primer argumento: datos
+      { status: 200 } // ✅ segundo argumento: init opcional
+    );
   } catch (error) {
     console.error("Error en el chatbot:", error);
-    return NextResponse.json({ response: 'Error interno del servidor.' }, { status: 500 });
+    return NextResponse.json(
+      { response: 'Error interno del servidor.' },
+      { status: 500 }
+    );
   }
 }
