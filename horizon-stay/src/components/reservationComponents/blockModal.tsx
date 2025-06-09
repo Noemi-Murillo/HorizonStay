@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Swal from 'sweetalert2';
+
 
 type Props = {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (startDate: string, endDate: string, cottageId: string) => void;
+    onSubmit: (startDate: string, endDate: string, cottageId: string, description: string) => void;
     cottages: { id: string; title: string }[];
 };
 
@@ -16,9 +18,20 @@ export default function BlockModal({ isOpen, onClose, onSubmit, cottages }: Prop
     const [description, setDescription] = useState("");
 
     const handleSubmit = () => {
-        if (startDate && endDate && selectedCottage) {
-            onSubmit(startDate, endDate, selectedCottage);
+        if (startDate && endDate && selectedCottage && description) {
+            onSubmit(startDate, endDate, selectedCottage, description);
             onClose();
+            setStartDate("");
+            setEndDate("");
+            setSelectedCottage("");
+            setDescription("");
+        } else {
+
+            Swal.fire('Error', 'Debe rellenar todos los campos.', 'warning');
+
+
+
+
         }
     };
 

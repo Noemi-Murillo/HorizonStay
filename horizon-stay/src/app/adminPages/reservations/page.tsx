@@ -50,9 +50,14 @@ export default function Reservations() {
             resourceId: value.cottage_id
           })
         );
-
+        const blockResponse = await fetch('/api/getBlocks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ value: 1 })
+        });
+        const blockData = await blockResponse.json();
         setResources(cottageResources);
-        setEvents(calendarEvents);
+        setEvents([...calendarEvents, ...blockData.data]);
 
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -164,11 +169,48 @@ export default function Reservations() {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         cottages={resources}
-        onSubmit={(start, end, cottageId) => {
-          console.log("Bloqueo creado:", { start, end, cottageId });
-          // Aquí haces la llamada API si quieres guardar el bloqueo
+        onSubmit={async (start, end, cottageId, description) => {
+          console.log("Intentando crear bloqueo:", { start, end, cottageId, description });
+
+          // ✅ Validar si ya existe un evento en ese rango para esa cabaña
+          const overlapExists = events.some((event) => {
+            const isSameCottage = event.resourceId === cottageId;
+
+            const eventStart = new Date(event.start).getTime();
+            const eventEnd = new Date(event.end).getTime();
+            const blockStart = new Date(start).getTime();
+            const blockEnd = new Date(end).getTime();
+
+            const overlaps = blockStart < eventEnd && blockEnd > eventStart;
+
+            return isSameCottage && overlaps;
+          });
+
+          if (overlapExists) {
+            Swal.fire('Error', 'Ya existe una reserva o bloqueo en ese rango de fechas para esta cabaña.', 'error');
+            return;
+          }
+
+      
+          const response = await fetch('/api/createBlock', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              start,
+              end,
+              cottageId,
+              description
+            })
+          });
+
+          if (response.ok) {
+            Swal.fire('Éxito', 'Se ha guardado el bloqueo de manera exitosa.', 'success');
+          } else {
+            Swal.fire('Error', 'Ocurrió un error al registrar el bloqueo.', 'warning');
+          }
         }}
       />
+      
 
 
       <button className="bg-green-600 hover:bg-green-700 transition px-8 py-3 my-5  mr-[35px] rounded-full text-white text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>
@@ -186,6 +228,7 @@ export default function Reservations() {
 
 
       <FullCalendar
+        height={600}
         plugins={[resourceTimelinePlugin, interactionPlugin]}
         initialView="resourceTimelineMonth"
 
@@ -201,16 +244,16 @@ export default function Reservations() {
         resources={resources}
         events={events}
         slotDuration="12:00:00"
-        eventDrop={handleEventDrop} // ← Aquí capturas los arrastres
+        eventDrop={handleEventDrop}
       />
 
 
-        <button
-          onClick={handleLogout}
-          className="mt-10 w-40 px-4 py-2 bg-green-500 text-white rounded hover:bg-red-600"
-        >
-          Cerrar sesión
-        </button>
+      <button
+        onClick={handleLogout}
+        className="mt-10 w-40 px-4 py-2 bg-green-500 text-white rounded hover:bg-red-600"
+      >
+        Cerrar sesión
+      </button>
 
     </div>
   );
