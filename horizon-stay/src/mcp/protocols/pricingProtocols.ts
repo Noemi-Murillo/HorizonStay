@@ -55,21 +55,20 @@ export const PricingProtocol: PricingContext = {
                 },
                 {
                     role: "user",
-                    content: `Estos son los datos de reservas por tipo de cabaña y mes: ${JSON.stringify(summarizedData)}.
+                    content: `Estos son los datos de reservas por tipo de cabaña y mes: ${JSON.stringify(summarizedData)}. Lago tiene una capacidad para 4 personas, arbol tiene capacidad para 6 personas y bosque para 8 personas, debido a esto puedes establecer un precio base y aumentarlo por la cantidad de personas que puede alojar la cabaña.
+                    Devuelve únicamente un array en formato JSON con la siguiente estructura:
 
-Devuelve únicamente un array en formato JSON con la siguiente estructura:
+                    [
+                    {
+                        "type_id": "lago" | "arbol" | "bosque",
+                        "month": "01" | "02" | ... | "12",
+                        "season": "alta" | "baja",
+                        "suggested_price": 85000
+                    },
+                    ...
+                    ]
 
-[
-  {
-    "type_id": "lago" | "arbol" | "bosque",
-    "month": "01" | "02" | ... | "12",
-    "season": "alta" | "baja",
-    "suggested_price": 85000
-  },
-  ...
-]
-
-No expliques nada. No uses texto adicional. Solo devuelve el JSON.`
+                    No expliques nada. No uses texto adicional. Solo devuelve el JSON.`
 
                 }
             ]
