@@ -125,6 +125,7 @@ const ReservationForm = () => {
           setTimeout(() => {
             router.push('/bookingInformation')
           }, 3000)
+          
         } else {
           Swal.fire({
             title: "¡Fracaso!",
@@ -154,7 +155,7 @@ const ReservationForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 p-4 border rounded max-w-md mx-auto bg-white"
+      className="mt-30 mb-30 space-y-4 p-4 border rounded max-w-xl mx-auto bg-white"
     >
       <h2 className="text-xl font-bold text-green-600">Reserva tu cabaña</h2>
 

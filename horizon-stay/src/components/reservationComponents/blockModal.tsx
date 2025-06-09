@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Swal from 'sweetalert2';
 
-
 type Props = {
     isOpen: boolean;
     onClose: () => void;
@@ -26,12 +25,7 @@ export default function BlockModal({ isOpen, onClose, onSubmit, cottages }: Prop
             setSelectedCottage("");
             setDescription("");
         } else {
-
             Swal.fire('Error', 'Debe rellenar todos los campos.', 'warning');
-
-
-
-
         }
     };
 
@@ -87,8 +81,6 @@ export default function BlockModal({ isOpen, onClose, onSubmit, cottages }: Prop
                         onChange={(e) => setDescription(e.target.value)}
                     />
                 </div>
-
-
 
                 <div className="flex justify-end space-x-2">
                     <button

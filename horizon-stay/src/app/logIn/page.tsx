@@ -23,14 +23,14 @@ export default function LoginPage() {
   return (
     <form
       onSubmit={onSubmit}
-      className="bg-white dark:bg-zinc-900 shadow-2xl rounded-2xl overflow-hidden border-4 border-green-400 dark:border-green-800 max-w-lg mx-auto mt-12"
+      className="bg-white dark:bg-zinc-900 shadow-2xl rounded-2xl overflow-hidden border-4 border-green-400 dark:border-green-800 max-w-lg mx-auto mt-40"
     >
       <div className="px-8 py-10 md:px-10">
         <h2 className="text-4xl font-extrabold text-center text-zinc-800 dark:text-white">
           ¡Bienvenido!
         </h2>
         <p className="text-center text-zinc-600 dark:text-zinc-400 mt-3">
-          Inicia sesión para continuar.
+          Este inicio de sesión es solo para administrativos, si quieres reservar dale click al botón de reservar al inicio de la página. 
         </p>
 
         <div className="mt-10">

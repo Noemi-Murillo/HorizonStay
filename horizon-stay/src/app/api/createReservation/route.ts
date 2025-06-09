@@ -4,7 +4,6 @@ import { createData } from '@/controllers/reservationController';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log("BODY", body);
     const id = await createData(body);
     return NextResponse.json({ message: 'Reservación creada exitosamente.', id, ok:true});
   } catch (error: any) {

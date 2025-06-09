@@ -35,9 +35,6 @@ const Section = ({ title, description, image, reverse, bgColor }: {
       >
         <h2 className="text-3xl font-bold mb-4">{title}</h2>
         <p className="text-lg mb-4">{description}</p>
-        <button className="bg-green-600 text-white py-2 px-4 rounded-xl shadow">
-          Conoce más
-        </button>
       </motion.div>
     </section>
   );
@@ -62,7 +59,7 @@ const PoolPage = () => {
         />
         <Section
           title="Piscina en tu cabañá"
-          description="Disfruta tu estadia en la pisicina cerca de tu cabañá"
+          description="Disfruta tu estadia en la pisicina cerca de tu cabaña"
           image="/pool/cabinPool.png"
           bgColor="bg-gray-50"
         />

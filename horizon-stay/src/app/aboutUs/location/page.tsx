@@ -2,7 +2,7 @@
 
 export default function ContactPage() {
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 mt-20">
       <div className="w-full md:w-1/2 p-10 bg-white shadow-lg">
         <h2 className="text-3xl font-bold mb-6 text-blue-700">Envíanos un mensaje</h2>
         <form className="space-y-5">
