@@ -1,44 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# 🏕️ Horizon Stay – Sistema de Reservas Inteligente
 
-First, run the development server:
+Este proyecto es un sistema completo de gestión de reservas para un complejo turístico con tres tipos de cabañas: junto al lago, en el bosque y en el árbol. Desarrollado con **Next.js** y **Firebase Realtime Database**, el sistema permite a los clientes realizar reservas, y a los administradores gestionar bloqueos de fechas y modificar precios automáticamente reservas mediante un **Model Context Protocol (MCP)** basado en IA.
+
+---
+
+## 🚀 Tecnologías Utilizadas
+
+- **Next.js 14** – Framework React para frontend y API routes
+- **Firebase Realtime Database** – Base de datos en tiempo real
+- **Firebase Authentication** – Inicio de sesión para administradores
+- **Tailwind CSS** – Estilizado rápido y responsivo
+- **FullCalendar** – Gestión visual de calendarios de reserva y bloqueo
+- **Supabase** *(solo temporal en pruebas)*
+- **OpenAI API (MCP)** – Reorganización de reservas y predicción de precios por demanda
+
+---
+
+## 🧩 Estructura del Proyecto
+
+
+---
+
+## 🔑 Funcionalidades Principales
+
+### Cliente
+
+- 📅 Selección de fechas y tipo de cabaña
+- 🛌 Formulario de reserva con validación
+- 📧 Correo de confirmación
+- 🔁 Consulta de reservas existentes
+
+### Administrador
+
+- 🔒 Inicio de sesión vía Firebase Auth
+- 🧱 Bloqueo de fechas (limpieza, mantenimiento)
+- 💸 Gestión de precios por tipo de cabaña y temporada
+
+### Model Context Protocol (MCP)
+
+- 🔍 Analiza la demanda de un año de reservas
+- 📈 Ajusta precios automáticamente (épocas altas/bajas)
+
+---
+
+## ⚙️ Instalación y Configuración
+
+### 1. Clonar el Repositorio
+
+```bash
+git clone https://github.com/tu-usuario/horizon-stay.git
+cd horizon-stay
+```
+
+### 2. Instalar Dependencias
+
+```bash
+npm install
+```
+
+### 3. Variables de Entorno
+
+Crea un archivo `.env.local` con tus claves:
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+NEXT_PUBLIC_FIREBASE_DATABASE_URL=...
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+NEXT_PUBLIC_FIREBASE_APP_ID=...
+```
+
+### 4. Ejecutar el Proyecto
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧪 Pruebas
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Se recomienda probar los siguientes casos:
 
-## Learn More
+- Hacer una reserva como cliente
+- Crear un bloqueo desde el panel admin
+- Simular demanda alta y observar cambios de precio
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📬 Contacto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Para dudas o sugerencias:
 
-## Deploy on Vercel
+- Email: horizon.stay.complex@gmail.com
+- Web: https://horizon-stay-g2h9-49gmev2n9-noemi-murillos-projects.vercel.app/
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# TODOS
-Improve the readme file
-remove the unnecessary console.log
-check the else statement
-Reduce the big components(100 lines is too much)
-Use CSR in the most of cases
-Only use english code
-Separate each FC in a new file
+---
+ 
+> Proyecto desarrollado por Noemí Murillo y Marconi Calvo🌐

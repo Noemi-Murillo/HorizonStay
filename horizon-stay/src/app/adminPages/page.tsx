@@ -227,8 +227,6 @@ export default function Reservations() {
 
       <button className="bg-green-600 hover:bg-green-700 transition px-8 py-3 my-5 mr-5 rounded-full text-white text-lg w-80 cursor-pointer" onClick={() => setPriceModalOpen(true)}>Gestionar precios</button>
 
-      <button className="bg-green-600 hover:bg-green-700 transition px-8 py-3 my-5 mr-5 rounded-full text-white text-lg w-80 cursor-pointer">Control ChatBot</button>
-
       <FullCalendar
         height={600}
         plugins={[resourceTimelinePlugin, interactionPlugin]}
