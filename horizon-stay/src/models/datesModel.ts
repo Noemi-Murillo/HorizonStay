@@ -85,7 +85,6 @@ export async function getFullyUnavailableDatesByType(
     }
   }
 
-  console.log("❌ Fechas totalmente bloqueadas:", unavailableDates)
 
   return unavailableDates
 }

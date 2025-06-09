@@ -36,7 +36,6 @@ export default function Reservations() {
           console.error("Datos faltantes en la respuesta", data);
           return;
         }
-        console.log(data.data.reservations)
         const cottageResources = Object.entries(data.data.cottages).map(
           ([id, value]: [string, any]) => ({
             id: id,
@@ -73,7 +72,6 @@ export default function Reservations() {
           body: JSON.stringify({ value: 1 })
         });
         const blockData = await blockResponse.json();
-        console.log(blockData)
         setResources(cottageResources);
         setEvents([...calendarEvents, ...blockData.data]);
 
@@ -101,9 +99,7 @@ export default function Reservations() {
     const tipo = evento.extendedProps.type;
 
     if (tipo === 'bloqueo') {
-      console.log("Este es un BLOQUEO");
     } else if (tipo === 'reserva') {
-      console.log("Este es una RESERVA");
     }
 
     setSelectedEvent(evento);
@@ -125,14 +121,6 @@ export default function Reservations() {
 
     const resource = info.event.getResources()[0]?.id;
 
-
-
-
-    console.log('Evento movido:');
-    console.log('ID:', id);
-    console.log('Inicio:', start);
-    console.log('Fin:', end);
-    console.log('Cabaña:', resource);
 
 
     const result = await Swal.fire({
@@ -161,7 +149,6 @@ export default function Reservations() {
         });
 
 
-        console.log("llamada API", response);
 
         if (response.ok) {
 
@@ -182,7 +169,6 @@ export default function Reservations() {
     } else {
 
       info.revert();
-      console.log("modificacion cancelada")
 
 
 
@@ -294,7 +280,6 @@ export default function Reservations() {
         onClose={() => setModalOpen(false)}
         cottages={resources}
         onSubmit={async (start, end, cottageId, description) => {
-          console.log("Intentando crear bloqueo:", { start, end, cottageId, description });
 
           const overlapExists = events.some((event) => {
             const isSameCottage = event.resourceId === cottageId;

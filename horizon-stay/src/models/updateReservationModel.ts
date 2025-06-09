@@ -18,7 +18,6 @@ export async function updateReservationData({
         cottage_id
     }
 
-    console.log(updates);
 
     await update(ref(database, `app_data/reservations/${id}`), updates)
 
