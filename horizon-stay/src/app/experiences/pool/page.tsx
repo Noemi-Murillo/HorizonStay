@@ -43,34 +43,35 @@ const Section = ({ title, description, image, reverse, bgColor }: {
 const PoolPage = () => {
   return (
     <ParallaxProvider>
-      <div className="space-y-24 bg-gray-50">
-        <Section
-          title="Piscina de ensueño"
-          description="Nada en nuestra piscina climatizada rodeada de naturaleza. Perfecta para toda la familia y abierta todo el año."
-          image="/pool/mainPool.png"
-          reverse
-          bgColor="bg-white"
-        />
-        <Section
-          title="Piscina para niños"
-          description="Diversión asegurada en nuestra piscina diseñada especialmente para los más pequeños, con profundidad segura, juegos acuáticos y supervisión constante."
-          image="/pool/RestaurantPool.png"
-          bgColor="bg-gray-50"
-        />
-        <Section
-          title="Piscina en tu cabañá"
-          description="Disfruta tu estadia en la pisicina cerca de tu cabaña"
-          image="/pool/cabinPool.png"
-          bgColor="bg-gray-50"
-        />
+      <div className="bg-gray-50 ">
+        <div className="pt-20 pb-20 space-y-10">
+          <Section
+            title="Piscina de ensueño"
+            description="Nada en nuestra piscina climatizada rodeada de naturaleza. Perfecta para toda la familia y abierta todo el año."
+            image="/pool/mainPool.png"
+            reverse
+            bgColor="bg-white"
+          />
+          <Section
+            title="Piscina para niños"
+            description="Diversión asegurada en nuestra piscina diseñada especialmente para los más pequeños, con profundidad segura, juegos acuáticos y supervisión constante."
+            image="/pool/RestaurantPool.png"
+            bgColor="bg-white"
+          />
+          <Section
+            title="Piscina en tu cabañá"
+            description="Disfruta tu estadia en la pisicina cerca de tu cabaña"
+            image="/pool/cabinPool.png"
+            bgColor="bg-white"
+          />
+        </div>
       </div>
       <footer className="w-full bg-gray-800 text-white text-center py-6">
         <p>&copy; {new Date().getFullYear()} Horizon Stay. Todos los derechos reservados.</p>
       </footer>
-    </ParallaxProvider>
+    </ParallaxProvider >
   );
 };
 
 export default PoolPage;
 
-  

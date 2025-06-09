@@ -43,7 +43,7 @@ const Section = ({ title, description, image, reverse, bgColor }: {
 const RestaurantPage = () => {
   return (
     <ParallaxProvider>
-      <div className="space-y-24 bg-gray-50">
+      <div className="space-y-10 bg-gray-50 pb-20 pt-20">
         <Section
           title="Restaurante Gourmet"
           description="Déjate sorprender por nuestro restaurante gourmet, donde cada plato es una experiencia. Ofrecemos cocina internacional con ingredientes frescos y una vista que deleita. Vive momentos inolvidables en un ambiente sofisticado, con atención al detalle y servicio personalizado."
@@ -55,7 +55,7 @@ const RestaurantPage = () => {
           description="Nuestro restaurante ofrece un entorno cálido y elegante, ideal para cenas románticas, reuniones familiares o eventos especiales. Disfruta de una atmósfera tranquila con iluminación tenue, decoración cuidada y música suave que complementan perfectamente cada comida."
           image="/restaurant/bar.png"
           reverse
-          bgColor="bg-gray-50"
+          bgColor="bg-white"
         />
         <Section
           title="Ingredientes frescos"
@@ -68,7 +68,7 @@ const RestaurantPage = () => {
           description="Contamos con un menú diverso que incluye opciones vegetarianas, veganas, sin gluten y para niños. Desde desayunos energizantes hasta cenas exclusivas, tenemos algo para cada gusto y momento del día."
           image="/restaurant/gastronomicVariety.png"
           reverse
-          bgColor="bg-gray-50"
+          bgColor="bg-white"
         />
         <Section
           title="Vistas panorámicas"

@@ -43,11 +43,11 @@ const Section = ({ title, description, image, reverse, bgColor }: {
 const soccerFieldPage = () => {
   return (
     <ParallaxProvider>
-      <div className="space-y-24 bg-gray-50">
+      <div className="space-y-24 bg-gray-50 pb-20 pt-20">
       <Section
           title="Cancha de fútbol"
           description="Juega un partido inolvidable en nuestra cancha de césped sintético. Ideal para grupos, torneos y encuentros recreativos."
-          image="/R.png"
+          image="/experiences/soccerField.png"
           reverse
           bgColor="bg-white"
         />
