@@ -15,12 +15,13 @@ export async function notifyClient(reservationData: ReservationData) {
 
   <!-- Logo pequeño -->
   <div style="text-align: center; margin-bottom: 20px;">
-    <img src="" alt="Horizon Stay Logo" style="max-width: 150px;">
+   <img src="https://drive.google.com/uc?export=view&id=16dQSM_q0DWrt1jTs0ONepaRvr4pgXqXg" alt="Imagen desde Drive" style="max-width: 150px;">
+
   </div>
 
   <!-- Imagen grande del complejo -->
   <div style="text-align: center; margin-bottom: 30px;">
-    <img src="" alt="Complejo Horizon Stay" style="width: 100%; max-width: 600px; border-radius: 8px;">
+   <img src="https://drive.google.com/uc?export=view&id=1BS9uAeRMBhH15bjLaY7KRCkfOIZ0HdPZ" style="max-width: 300px;" alt="Horizon Stay Logo">
   </div>
 
   <!-- Texto de agradecimiento -->
@@ -45,7 +46,7 @@ export async function notifyClient(reservationData: ReservationData) {
    </div>
     <!-- Botón -->
     <div style="text-align: center; margin-top: 60px;">
-      <a href="https://www.horizonstay.com" target="_blank" style="background-color: #105c49; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+      <a href="https://horizon-stay-g2h9-49gmev2n9-noemi-murillos-projects.vercel.app/" target="_blank" style="background-color: #105c49; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
         Visita nuestra página web →
       </a>
     </div>
@@ -54,7 +55,7 @@ export async function notifyClient(reservationData: ReservationData) {
   <!-- Información de contacto -->
   <div style="text-align: center; margin-top: 30px; font-size: 14px; color: #555;">
     <p>Contacto: <a href="mailto:horizon.stay.complex@gmail.com">horizon.stay.complex@gmail.com</a></p>
-    <p>Sitio web: <a href="https://www.horizonstay.com" target="_blank">www.horizonstay.com</a></p>
+    <p>Sitio web: <a href="https://horizon-stay-g2h9-49gmev2n9-noemi-murillos-projects.vercel.app/" target="_blank">www.horizonstay.com</a></p>
   </div>
 
 </body>
