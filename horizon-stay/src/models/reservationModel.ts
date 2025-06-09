@@ -1,18 +1,7 @@
 import { database } from '@/lib/firebaseClient'
 import { ref, get, set } from 'firebase/database'
 import { v4 as uuidv4 } from 'uuid'
-
-type ReservationData = {
-  name: string
-  lastName: string
-  email: string
-  phone: string
-  end: string
-  start: string
-  notes?: string
-  cottage?: string  
-  guests: number
-}
+import { useReservationForm, ReservationData } from "@/hooks/useReservationForm"
 
 function generateCustomId(): string {
   const letters = Array.from({ length: 3 }, () =>
@@ -107,6 +96,9 @@ export async function insertData(reservationData: ReservationData) {
     name: reservationData.name + ' ' + reservationData.lastName,
     email: reservationData.email,
     reservationId: reserveNumber,
-    cottage_id: availableCottageId
+    start: reservationData.start,
+    end: reservationData.end,
+    cottage_id: availableCottageId,
+    cottageName: reservationData.cottageName
   }
 }

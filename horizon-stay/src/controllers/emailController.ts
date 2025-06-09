@@ -1,16 +1,8 @@
 import { sendReservationEmail } from '@/models/emailModel';
 import {  logoHorizonStay , placeImage } from '@/utils/emailImages'
-type ReservationData = {
-    name: string
-    email: string
-    end?: string
-    start?: string
-    notes?: string
-    cottage?: string
-    reservationId: string
-}
+import { ReservationData } from "@/hooks/useReservationForm"
 
-export async function notifyClient(reservationData: ReservationData) {
+export async function  notifyClient(reservationData: ReservationData) {
 
     const html = `
 <!DOCTYPE html>
@@ -44,7 +36,7 @@ export async function notifyClient(reservationData: ReservationData) {
     <p><strong>Nombre:</strong> ${reservationData.name}</p>
     <p><strong>Check-in:</strong> ${reservationData.start}</p>
     <p><strong>Check-out:</strong> ${reservationData.end}</p>
-    <p><strong>Cabaña:</strong> ${reservationData.cottage}</p>
+    <p><strong>Cabaña:</strong> ${reservationData.cottageName}</p>
 
     <!-- Botón -->
     <div style="text-align: center; margin-top: 60px;">

@@ -89,6 +89,8 @@ const ReservationForm = () => {
       })
 
       const data = await response.json()
+      console.log("INOFRMACIÓN RESERVA:", formData);
+      console.log("INOFRMACIÓN RESERVA:", data);
 
       if (data.ok) {
         const email = await fetch('/api/emailReservation', {
@@ -206,9 +208,18 @@ const ReservationForm = () => {
         name="cottage"
         rules={{ required: "Debes seleccionar una cabaña" }}
         render={({ field }) => (
-          <SelectCottage onChange={field.onChange} guests={guests} />
+          <SelectCottage
+            value={field.value}
+            guests={guests}
+            onChange={({ value, label }) => {
+              field.onChange(value); 
+              setValue("cottageName", label); 
+            }}
+          />
         )}
       />
+
+
       {errors.cottage && <p className="text-red-500 text-sm">{errors.cottage.message}</p>}
 
       {getCottageCapacity(cottageId) && (

@@ -4,27 +4,42 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 type Props = {
-  onChange: (value: string) => void
-  value?: string
-  guests: number
-}
+  onChange: (data: { value: string; label: string }) => void;
+  value?: string;
+  guests: number;
+};
 
 const SelectCottage: React.FC<Props> = ({ onChange, value, guests }) => {
   const items = [
     { value: "COT001", label: "Cabaña del Lago", capacity: 4 },
     { value: "COT002", label: "Cabaña del Árbol", capacity: 6 },
     { value: "COT003", label: "Cabaña del Bosque", capacity: 8 },
-  ]
+  ];
+
+  const getSelectedLabel = (value?: string) => {
+    const selected = items.find((item) => item.value === value);
+    return selected?.label ?? "Seleccione una opción";
+  };
 
   return (
     <div>
       <label className="block font-medium text-gray-700 mb-1">Cabaña:</label>
-      <Select onValueChange={onChange} value={value}>
+      <Select
+        onValueChange={(val) => {
+          const selected = items.find(item => item.value === val);
+          if (selected) {
+            onChange({ value: selected.value, label: selected.label });
+          }
+        }}
+        value={value}
+      >
         <SelectTrigger className="w-full border rounded px-3 py-2 bg-white shadow">
-          <SelectValue placeholder="Seleccione una opción" />
+          <SelectValue placeholder="Seleccione una opción">
+            {getSelectedLabel(value)}
+          </SelectValue>
         </SelectTrigger>
 
         <SelectContent className="z-50 bg-white rounded shadow-md">
@@ -44,7 +59,7 @@ const SelectCottage: React.FC<Props> = ({ onChange, value, guests }) => {
         </SelectContent>
       </Select>
     </div>
-  )
-}
+  );
+};
 
-export default SelectCottage
+export default SelectCottage;
