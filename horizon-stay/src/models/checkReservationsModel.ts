@@ -32,7 +32,6 @@ export async function getReservations() {
             },
             {} as Record<string, any>
         );
-        console.log(reservations)
         return {
             cottages,
             reservations

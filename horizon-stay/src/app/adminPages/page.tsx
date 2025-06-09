@@ -83,7 +83,11 @@ export default function Reservations() {
   const handleEventClick = (clickInfo: any) => {
     const evento = clickInfo.event;
     const tipo = evento.extendedProps.type;
-    console.log(tipo === 'bloqueo' ? 'Este es un BLOQUEO' : 'Este es una RESERVA');
+
+    if (tipo === 'bloqueo') {
+    } else if (tipo === 'reserva') {
+    }
+
     setSelectedEvent(evento);
     setEventModalOpen(true);
   };
@@ -190,7 +194,8 @@ export default function Reservations() {
         onClose={() => setModalOpen(false)}
         cottages={resources}
         onSubmit={async (start, end, cottageId, description) => {
-          const overlapExists = events.some(event => {
+
+          const overlapExists = events.some((event) => {
             const isSameCottage = event.resourceId === cottageId;
             const eventStart = new Date(event.start).getTime();
             const eventEnd = new Date(event.end).getTime();

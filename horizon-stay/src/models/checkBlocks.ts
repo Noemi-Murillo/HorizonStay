@@ -6,7 +6,6 @@ export async function getBlockEvents() {
     const snapshot = await get(blocksRef);
 
     if (!snapshot.exists()) {
-        console.log('No hay bloques registrados.');
         return [];
     }
 
@@ -22,11 +21,9 @@ export async function getBlockEvents() {
             editable: false,
             backgroundColor: '#F87171',
             ids: id,
-            type: 'bloqueo' // ← importante para diferenciar
+            type: 'bloqueo' 
         })
     );
-    console.log('Bloques obtenidos:', blockEvents);
-
 
 
     return blockEvents;

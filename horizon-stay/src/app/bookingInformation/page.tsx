@@ -13,7 +13,6 @@ const BookingInformation = () => {
   const [formReset, setFormReset] = useState(false);
 
   const handleVerify = (data: any) => {
-    console.log("Resultado de la verificación:", data);
 
     if (data && data.ok === true && data.reservationId) {
       setVerified(true);

@@ -39,8 +39,6 @@ const VerificationForm = ({ onVerify, resetSignal }: Props) => {
         const inputName = normalize(guestName);
         const storedName = normalize(data.data.name);
 
-        console.log("nombre ingresado:", inputName);
-        console.log("nombre almacenado:", storedName);
 
         if (inputName === storedName) {
           onVerify({

@@ -9,7 +9,6 @@ export async function insertBlockData(ObjBlock: any) {
 
   if (snapshot.exists()) {
     const blocks = snapshot.val();
-    console.log("Lista actual de blocks:", blocks);
 
     const blockNumbers = Object.keys(blocks)
       .map(key => parseInt(key.replace('BLOCK', '')))
@@ -21,7 +20,6 @@ export async function insertBlockData(ObjBlock: any) {
   }
 
   await set(ref(database, `app_data/blocks/${nextBlockId}`), ObjBlock);
-  console.log(`Nuevo bloque ${nextBlockId} insertado.`, ObjBlock);
 
   return nextBlockId;
 }
