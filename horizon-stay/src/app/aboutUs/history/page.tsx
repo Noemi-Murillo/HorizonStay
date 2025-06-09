@@ -33,7 +33,7 @@ const eventos = [
 
 const HistoryCabins = () => {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 text-gray-800">
+    <div className="max-w-4xl mx-auto px-6 py-12 text-gray-800 mt-20">
       <motion.h1
         className="text-4xl font-bold text-center mb-12"
         initial={{ opacity: 0, y: -30 }}

@@ -34,17 +34,17 @@ const VerificationForm = ({ onVerify, resetSignal }: Props) => {
       });
 
       const data = await response.json();
-      console.log("RESERVATION DATA:", data);
 
       if (data.ok) {
         const inputName = normalize(guestName);
         const storedName = normalize(data.data.name);
 
-        console.log("nombre", inputName);
-        console.log("nombre", storedName);
+        console.log("nombre ingresado:", inputName);
+        console.log("nombre almacenado:", storedName);
 
         if (inputName === storedName) {
           onVerify({
+            reservationId: code, 
             name: data.data.name,
             email: data.data.email,
             cabin: data.data.cottage,

@@ -261,7 +261,6 @@ export default function Reservations() {
                 Swal.fire('Eliminado', 'El bloqueo fue eliminado correctamente.', 'success');
                 setEventModalOpen(false);
 
-                // Opcional: refrescar los eventos
                 setEvents(prev => prev.filter(e => e.id !== selectedEvent.id));
               } else {
                 Swal.fire('Error', 'No se pudo eliminar el bloqueo.', 'error');

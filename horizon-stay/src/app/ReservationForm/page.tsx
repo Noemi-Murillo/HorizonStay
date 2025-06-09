@@ -125,7 +125,6 @@ const ReservationForm = () => {
           setTimeout(() => {
             router.push('/bookingInformation')
           }, 3000)
-          
         } else {
           Swal.fire({
             title: "¡Fracaso!",
@@ -155,19 +154,19 @@ const ReservationForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mt-30 mb-30 space-y-4 p-4 border rounded max-w-xl mx-auto bg-white"
+      className="space-y-4 border rounded max-w-md mx-auto mt-20 mb-10 max-w-md mx-auto p-8 shadow-xl border-gray-200 bg-white"
     >
       <h2 className="text-xl font-bold text-green-600">Reserva tu cabaña</h2>
 
       <div>
         <label className="block font-medium text-gray-700">Nombre</label>
-        <input {...register("name", { required: "El nombre es obligatorio" })} className="border p-2 rounded w-full text-gray-700" />
+        <input {...register("name", { required: "El nombre es obligatorio" })} className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150" />
         {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
       </div>
 
       <div>
         <label className="block font-medium text-gray-700">Apellidos</label>
-        <input {...register("lastName", { required: "Los apellidos son obligatorios" })} className="border p-2 rounded w-full text-gray-700" />
+        <input {...register("lastName", { required: "Los apellidos son obligatorios" })} className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150" />
         {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
       </div>
 
@@ -182,7 +181,7 @@ const ReservationForm = () => {
               message: "Correo inválido"
             }
           })}
-          className="border p-2 rounded w-full text-gray-700"
+          className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150"
         />
         {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
       </div>
@@ -192,7 +191,7 @@ const ReservationForm = () => {
         <input
           type="tel"
           {...register("phone", { required: "El teléfono es obligatorio" })}
-          className="border p-2 rounded w-full text-gray-700"
+          className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150"
         />
         {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
       </div>
@@ -206,7 +205,7 @@ const ReservationForm = () => {
             required: "Debes indicar la cantidad de personas",
             min: { value: 1, message: "Debe ser al menos 1 persona" }
           })}
-          className="border p-2 rounded w-full text-gray-700"
+          className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150"
         />
         {errors.guests && <p className="text-red-500 text-sm">{errors.guests.message}</p>}
       </div>
@@ -255,7 +254,7 @@ const ReservationForm = () => {
           cottageType={getCottageTypeFromId(cottageId)!}
         />
       ) : (
-        <p className="text-center text-yellow-600 font-medium bg-yellow-100 rounded p-2">
+        <p className="text-center text-yellow-600 font-medium rounded p-2">
           ⚠️ Primero debes seleccionar una cabaña para ver la disponibilidad.
         </p>
       )}
@@ -271,7 +270,7 @@ const ReservationForm = () => {
         <textarea
           {...register("notes")}
           placeholder="Especificaciones o comentarios..."
-          className="border p-2 rounded w-full text-gray-700"
+          className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150"
         />
       </div>
 

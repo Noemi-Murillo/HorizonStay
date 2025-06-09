@@ -36,13 +36,13 @@ const SelectCottage: React.FC<Props> = ({ onChange, value, guests }) => {
         }}
         value={value}
       >
-        <SelectTrigger className="w-full border rounded px-3 py-2 bg-white shadow">
+        <SelectTrigger className="border p-2 rounded border-gray-200 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150">
           <SelectValue placeholder="Seleccione una opción">
             {getSelectedLabel(value)}
           </SelectValue>
         </SelectTrigger>
 
-        <SelectContent className="z-50 bg-white rounded shadow-md">
+        <SelectContent className="z-50 bg-white rounded shadow-md border p-2 rounded border-gray-300 w-full text-gray-700 px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600 transition-all duration-150">
           {items.map((item) => (
             <SelectItem
               key={item.value}
