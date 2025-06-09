@@ -18,7 +18,7 @@ export async function getBlockedDatesFromDB() {
     const cottageTypeById: Record<string, string> = {};
 
     for (const id in cottages) {
-      const type = cottages[id].type;
+      const type = cottages[id].type_id;
       cottageTypeById[id] = type;
       cottageCountByType[type] = (cottageCountByType[type] || 0) + 1;
     }
@@ -27,14 +27,19 @@ export async function getBlockedDatesFromDB() {
 
     for (const resId in reservations) {
       const res = reservations[resId];
-      const type = res.cottage_type;
-      const start = new Date(res.start_date);
-      const end = new Date(res.end_date);
+      const cottageId = res.cottage_id;
+      const type = cottageTypeById[cottageId];
+      if (!type) continue;
 
       if (!dateCounters[type]) dateCounters[type] = {};
 
+      const start = new Date(res.start);
+      const end = new Date(res.end);
+      const adjustedEnd = new Date(end);
+      adjustedEnd.setDate(adjustedEnd.getDate() - 1); 
+
       const current = new Date(start);
-      while (current <= end) {
+      while (current <= adjustedEnd) {
         const key = current.toISOString().split('T')[0];
         dateCounters[type][key] = (dateCounters[type][key] || 0) + 1;
         current.setDate(current.getDate() + 1);
@@ -43,33 +48,36 @@ export async function getBlockedDatesFromDB() {
 
     for (const blockId in blocks) {
       const block = blocks[blockId];
-      const type = cottageTypeById[blockId];
+      const cottageId = block.cottageId || block.cottage_id;
+      const type = cottageTypeById[cottageId];
       if (!type) continue;
 
       if (!dateCounters[type]) dateCounters[type] = {};
 
-      const start = new Date(block.start_date);
-      const end = new Date(block.end_date);
+      const start = new Date(block.start || block.start_date);
+      const end = new Date(block.end || block.end_date);
+      const adjustedEnd = new Date(end);
+      adjustedEnd.setDate(adjustedEnd.getDate() - 1); 
+
       const current = new Date(start);
-      while (current <= end) {
+      while (current <= adjustedEnd) {
         const key = current.toISOString().split('T')[0];
         dateCounters[type][key] = (dateCounters[type][key] || 0) + 1;
         current.setDate(current.getDate() + 1);
       }
     }
 
-
     const blockedDates: Record<string, string[]> = {};
-
     for (const type in dateCounters) {
       const max = cottageCountByType[type] || 5;
       blockedDates[type] = Object.entries(dateCounters[type])
         .filter(([_, count]) => count >= max)
         .map(([date]) => date);
     }
-    console.log("BlockedDates generadas:", blockedDates)
 
+    console.log("BlockedDates generadas:", blockedDates);
     return { blockedDates };
+
   } catch (error) {
     console.error("Error fetching blocked dates:", error);
     return { blockedDates: {} };

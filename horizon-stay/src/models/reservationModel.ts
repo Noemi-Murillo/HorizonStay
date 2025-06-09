@@ -1,7 +1,8 @@
 import { database } from '@/lib/firebaseClient'
 import { ref, get, set } from 'firebase/database'
 import { v4 as uuidv4 } from 'uuid'
-import { useReservationForm, ReservationData } from "@/hooks/useReservationForm"
+import { ReservationData } from "@/hooks/useReservationForm"
+
 
 function generateCustomId(): string {
   const letters = Array.from({ length: 3 }, () =>
@@ -39,7 +40,12 @@ async function generateUniqueReserveNumber(): Promise<string> {
 }
 
 function isDateOverlap(startA: string, endA: string, startB: string, endB: string): boolean {
-  return !(new Date(endA) < new Date(startB) || new Date(startA) > new Date(endB))
+  const aStart = new Date(startA)
+  const aEnd = new Date(endA)
+  const bStart = new Date(startB)
+  const bEnd = new Date(endB)
+
+  return !(aEnd <= bStart || aStart >= bEnd)
 }
 
 export async function insertData(reservationData: ReservationData) {
@@ -53,13 +59,20 @@ export async function insertData(reservationData: ReservationData) {
   const allCottages = cottagesSnap.val()
   const reservations = reservationsSnap.exists() ? Object.values(reservationsSnap.val()) : []
 
-  const availableCottageId = Object.keys(allCottages).find(cottageId => {
+  const start = reservationData.start.includes("T")
+    ? reservationData.start
+    : `${reservationData.start}T12:00:00-06:00`
 
+  const end = reservationData.end.includes("T")
+    ? reservationData.end
+    : `${reservationData.end}T12:00:00-06:00`
+
+  const availableCottageId = Object.keys(allCottages).find(cottageId => {
     if (!cottageId.startsWith(reservationData.cottage!)) return false
 
     const isTaken = reservations.some((r: any) =>
       r.cottage_id === cottageId &&
-      isDateOverlap(reservationData.start, reservationData.end, r.start, r.end)
+      isDateOverlap(start, end, r.start, r.end)
     )
 
     return !isTaken
@@ -69,7 +82,6 @@ export async function insertData(reservationData: ReservationData) {
     throw new Error('Todas las cabañas de este tipo ya están reservadas para esas fechas.')
   }
 
-
   const guestId = uuidv4()
   await set(ref(database, `app_data/guests/${guestId}`), {
     name: reservationData.name + ' ' + reservationData.lastName,
@@ -78,13 +90,12 @@ export async function insertData(reservationData: ReservationData) {
     registration_date: new Date().toISOString(),
   })
 
-
   const reserveNumber = await generateUniqueReserveNumber()
   await set(ref(database, `app_data/reservations/${reserveNumber}`), {
     reserve_number: reserveNumber,
     cottage_id: availableCottageId,
-    start: reservationData.start,
-    end: reservationData.end,
+    start,
+    end,
     guest_id: guestId,
     guests: reservationData.guests,
     notes: reservationData.notes || '',
@@ -96,8 +107,8 @@ export async function insertData(reservationData: ReservationData) {
     name: reservationData.name + ' ' + reservationData.lastName,
     email: reservationData.email,
     reservationId: reserveNumber,
-    start: reservationData.start,
-    end: reservationData.end,
+    start,
+    end,
     cottage_id: availableCottageId,
     cottageName: reservationData.cottageName
   }

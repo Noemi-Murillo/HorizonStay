@@ -22,12 +22,13 @@ const CalendarReservation = ({ onDateSelect, cottageType }: Props) => {
       try {
         const response = await fetch('/api/getBlockedDates')
         const result = await response.json()
-        console.log("Fechas RESULT:", result)
 
         if (result.ok) {
           const blocked = result.data.blockedDates[cottageType] || []
-          const parsedDates = blocked.map((d: string) => new Date(d))
-          console.log("Fechas bloqueadas:", parsedDates)
+          const parsedDates = blocked.map((d: string) => {
+            const [year, month, day] = d.split('-').map(Number)
+            return new Date(year, month - 1, day)
+          })
           setReservedDates(parsedDates)
           setError('')
         } else {
@@ -41,6 +42,8 @@ const CalendarReservation = ({ onDateSelect, cottageType }: Props) => {
 
     if (cottageType) loadDates()
   }, [cottageType])
+
+
 
   const isDateUnavailable = (date: Date) =>
     reservedDates.some(d => sameDay(d, date))

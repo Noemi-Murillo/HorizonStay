@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import React, { useState } from "react"
 import { Controller } from "react-hook-form"
@@ -56,6 +56,15 @@ const ReservationForm = () => {
     }
   }
 
+  // ✅ Agrega hora personalizada a fecha
+  const formatWithTime = (dateStr: string, hour: string): string => {
+    const [year, month, day] = dateStr.split("-").map(Number)
+    const date = new Date(year, month - 1, day)
+    const [h, m] = hour.split(":").map(Number)
+    date.setHours(h, m, 0, 0)
+    return date.toISOString()
+  }
+
   const onSubmit = async (formData: ReservationData) => {
     setIsSubmitting(true)
 
@@ -82,6 +91,10 @@ const ReservationForm = () => {
         return
       }
 
+      // ✅ Formatear fechas con hora personalizada
+      formData.start = formatWithTime(formData.start, "12:00") // check-in
+      formData.end = formatWithTime(formData.end, "18:00")     // check-out
+
       const response = await fetch('/api/createReservation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -89,8 +102,8 @@ const ReservationForm = () => {
       })
 
       const data = await response.json()
-      console.log("INOFRMACIÓN RESERVA:", formData);
-      console.log("INOFRMACIÓN RESERVA:", data);
+      console.log("INFORMACIÓN RESERVA:", formData);
+      console.log("RESPUESTA:", data);
 
       if (data.ok) {
         const email = await fetch('/api/emailReservation', {
@@ -115,7 +128,7 @@ const ReservationForm = () => {
         } else {
           Swal.fire({
             title: "¡Fracaso!",
-            text: `${data.error}`,
+            text: `${info.error}`,
             icon: "warning"
           })
         }
@@ -147,19 +160,13 @@ const ReservationForm = () => {
 
       <div>
         <label className="block font-medium text-gray-700">Nombre</label>
-        <input
-          {...register("name", { required: "El nombre es obligatorio" })}
-          className="border p-2 rounded w-full text-gray-700"
-        />
+        <input {...register("name", { required: "El nombre es obligatorio" })} className="border p-2 rounded w-full text-gray-700" />
         {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
       </div>
 
       <div>
         <label className="block font-medium text-gray-700">Apellidos</label>
-        <input
-          {...register("lastName", { required: "Los apellidos son obligatorios" })}
-          className="border p-2 rounded w-full text-gray-700"
-        />
+        <input {...register("lastName", { required: "Los apellidos son obligatorios" })} className="border p-2 rounded w-full text-gray-700" />
         {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
       </div>
 
@@ -212,13 +219,12 @@ const ReservationForm = () => {
             value={field.value}
             guests={guests}
             onChange={({ value, label }) => {
-              field.onChange(value); 
-              setValue("cottageName", label); 
+              field.onChange(value)
+              setValue("cottageName", label)
             }}
           />
         )}
       />
-
 
       {errors.cottage && <p className="text-red-500 text-sm">{errors.cottage.message}</p>}
 
