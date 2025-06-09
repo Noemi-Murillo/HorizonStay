@@ -1,16 +1,6 @@
 import { insertData } from '@/models/reservationModel';
+import { ReservationData } from "@/hooks/useReservationForm"
 
-type ReservationData = {
-  name: string
-  lastName: string
-  email: string
-  phone: string
-  end: string
-  start: string
-  notes?: string
-  cottage?: string
-   guests: number 
-}
 
 export async function createData(reservationData: ReservationData) {
   

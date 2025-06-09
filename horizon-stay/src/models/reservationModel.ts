@@ -100,7 +100,8 @@ export async function insertData(reservationData: ReservationData) {
     guests: reservationData.guests,
     notes: reservationData.notes || '',
     status: 'pendiente',
-    total_price: 1000
+    total_price: reservationData.total_price ?? 0
+
   })
 
   return {
@@ -110,6 +111,7 @@ export async function insertData(reservationData: ReservationData) {
     start,
     end,
     cottage_id: availableCottageId,
-    cottageName: reservationData.cottageName
+    cottageName: reservationData.cottageName,
+    total_price: reservationData.total_price
   }
 }

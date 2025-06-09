@@ -12,6 +12,7 @@ export type ReservationData = {
   notes?: string
   cottage?: string
   cottageName?: string
+  total_price?: number
 }
 
 export const useReservationForm = () => {

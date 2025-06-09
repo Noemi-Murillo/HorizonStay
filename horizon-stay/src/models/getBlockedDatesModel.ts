@@ -75,7 +75,6 @@ export async function getBlockedDatesFromDB() {
         .map(([date]) => date);
     }
 
-    console.log("BlockedDates generadas:", blockedDates);
     return { blockedDates };
 
   } catch (error) {

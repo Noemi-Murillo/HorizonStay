@@ -56,7 +56,6 @@ const ReservationForm = () => {
     }
   }
 
-  // ✅ Agrega hora personalizada a fecha
   const formatWithTime = (dateStr: string, hour: string): string => {
     const [year, month, day] = dateStr.split("-").map(Number)
     const date = new Date(year, month - 1, day)
@@ -91,9 +90,12 @@ const ReservationForm = () => {
         return
       }
 
-      // ✅ Formatear fechas con hora personalizada
-      formData.start = formatWithTime(formData.start, "12:00") // check-in
-      formData.end = formatWithTime(formData.end, "18:00")     // check-out
+      formData.start = formatWithTime(formData.start, "12:00")
+      formData.end = formatWithTime(formData.end, "12:00")
+      formData.total_price = totalPrice ?? 0
+
+
+
 
       const response = await fetch('/api/createReservation', {
         method: 'POST',
@@ -101,9 +103,12 @@ const ReservationForm = () => {
         body: JSON.stringify(formData)
       })
 
+      console.log("TOTAL PRICE ENVIADO:", formData.total_price)
+      console.log("TOTAL PRICE ENVIADO:", formData)
+
+
       const data = await response.json()
-      console.log("INFORMACIÓN RESERVA:", formData);
-      console.log("RESPUESTA:", data);
+
 
       if (data.ok) {
         const email = await fetch('/api/emailReservation', {
@@ -239,14 +244,15 @@ const ReservationForm = () => {
           onDateSelect={async ({ startDate, endDate, numNights }) => {
             setValue("start", startDate)
             setValue("end", endDate)
-            setTotalPrice(null)
             setNumNights(numNights)
 
             const type = getCottageTypeFromId(cottageId)
             if (type) {
               const price = await fetchCottagePrice(type)
               if (price !== null) {
-                setTotalPrice(price * numNights)
+                const finalPrice = price * numNights
+                setTotalPrice(finalPrice)
+                setValue("total_price", finalPrice)
               }
             }
           }}
