@@ -117,3 +117,6 @@ body > main > div > main > div > div > div.fc-view-harness.fc-view-harness-activ
 
   color: #FFF !important;
 }
+.fc-license-message {
+  display: none !important;
+}

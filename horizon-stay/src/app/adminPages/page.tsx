@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import esLocale from '@fullcalendar/core/locales/es';
 import Swal from 'sweetalert2';
 import BlockModal from '@/components/reservationComponents/blockModal';
 import PriceModal from '@/components/reservationComponents/priceManagmentModal';
@@ -47,7 +48,7 @@ export default function Reservations() {
               start: value.start,
               end: value.end,
               resourceId: value.cottage_id,
-              backgroundColor: isPending ? '#FBBF24' : '#2563EB',
+              backgroundColor: isPending ? '#FBBF24' : '#00a63e',
               editable: true,
               type: 'reserva',
               email: value.email,
@@ -71,6 +72,8 @@ export default function Reservations() {
     };
     fetchData();
   }, []);
+
+
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -126,6 +129,8 @@ export default function Reservations() {
     } else {
       info.revert();
     }
+
+    
   };
 
   return (
@@ -156,7 +161,7 @@ export default function Reservations() {
           }
           setEventModalOpen(false);
         }}
-        onEdit={() => {}}
+        onEdit={() => { }}
         onDelete={async () => {
           const confirm = await Swal.fire({
             title: '¿Eliminar evento?',
@@ -245,6 +250,7 @@ export default function Reservations() {
         slotDuration="12:00:00"
         eventDrop={handleEventDrop}
         eventClick={handleEventClick}
+        locale={esLocale}
       />
 
       <button onClick={handleLogout} className="mt-10 w-40 px-4 py-2 bg-green-500 text-white rounded hover:bg-red-600">Cerrar sesión</button>
