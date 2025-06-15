@@ -137,7 +137,7 @@ export default function Reservations() {
     <div className="max-w-[1400px] mx-auto p-1  mb-10">
       <h1 className="text-2xl font-bold prueba">Reservaciones</h1>
       <p className=" text-gray-600">Mantenimiento de reservaciones</p>
-
+      
       <EventModal
         isOpen={eventModalOpen}
         onClose={() => setEventModalOpen(false)}
@@ -231,9 +231,12 @@ export default function Reservations() {
       <div className="flex justify-between items-center flex-wrap gap-2 my-5">
         <div className="flex gap-5">
 
-          <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>Crear bloqueos</button>
+          <button className="bg-green-600 hover:bg-green-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>Crear bloqueos</button>
 
-          <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setPriceModalOpen(true)}>Gestionar precios</button>
+          <button className="bg-green-600 hover:bg-green-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setPriceModalOpen(true)}>Gestionar precios</button>
+
+          {/*<button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setPriceModalOpen(true)}>Acomodar reservas</button>*/}
+
         </div>
 
         <button onClick={handleLogout} className="ml-auto mt-05 w-40 px-4 py-2 bg-green-600 text-white font-bold rounded hover:bg-red-600 cursor-pointer">Cerrar sesión</button>
@@ -241,7 +244,7 @@ export default function Reservations() {
       </div>
 
       <p>Guía de colores:</p>
-      <p className="mt-2 mb-5">🟢 Reservación confirmada y pagada  🟡 Reservación pendiente de pago   🔴 Bloqueo administrativo</p>
+      <p className="mt-2 mb-5">🟩Reservación confirmada y pagada  🟨Reservación pendiente de pago   🟥Bloqueo administrativo</p>
 
       <FullCalendar
         height={750}
