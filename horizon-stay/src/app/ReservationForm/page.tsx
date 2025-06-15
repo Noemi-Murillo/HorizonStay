@@ -70,7 +70,6 @@ const ReservationForm = () => {
   const fetchCottagePrice = async (type: string): Promise<number | null> => {
     try {
       if (typeof window === 'undefined') {
-        console.warn('fetchCottagePrice solo puede ejecutarse en el cliente');
         return null;
       }
 
