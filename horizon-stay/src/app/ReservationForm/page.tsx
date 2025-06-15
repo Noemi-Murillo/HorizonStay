@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useState } from "react"
+import { useEffect } from 'react';
+
 import { Controller } from "react-hook-form"
 import { useReservationForm, ReservationData } from "@/hooks/useReservationForm"
 import SelectCottage from "@/components/reservationComponents/SelectCottage"
@@ -8,12 +10,14 @@ import CalendarReservation from "@/components/calendarComponents/CalendarReserva
 import ReservationButton from "@/components/reservationComponents/ReservationButton"
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/navigation'
+import { parse } from "path";
 
 const ReservationForm = () => {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [totalPrice, setTotalPrice] = useState<number | null>(null)
   const [numNights, setNumNights] = useState<number>(0)
+  const [data, setData] = useState(null);
 
   const {
     register,
@@ -33,6 +37,24 @@ const ReservationForm = () => {
     "COT003": 8
   }
 
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch('/api/checkReservations');
+        const json = await res.json();
+
+        if (!res.ok) throw new Error(json.error || 'Error en la consulta');
+
+        setData(json.data);
+        localStorage.setItem('appData', JSON.stringify(json.data));
+      } catch (err) {
+        console.error('Error al obtener datos:', err);
+      }
+    }
+
+    fetchData();
+  }, []);
   const getCottageTypeFromId = (id: string): "lago" | "arbol" | "bosque" | null => {
     if (id.startsWith("COT001")) return "lago"
     if (id.startsWith("COT002")) return "arbol"
@@ -47,14 +69,24 @@ const ReservationForm = () => {
 
   const fetchCottagePrice = async (type: string): Promise<number | null> => {
     try {
-      const res = await fetch(`/api/getPrice?type=${type}`)
-      const data = await res.json()
-      return data.price ?? null
+      if (typeof window === 'undefined') {
+        console.warn('fetchCottagePrice solo puede ejecutarse en el cliente');
+        return null;
+      }
+
+      const storedData = localStorage.getItem('appData');
+      if (!storedData) {
+        return null;
+      }
+
+      const parsedData = JSON.parse(storedData);
+      const price = parsedData?.cottage_types?.[type]?.price_per_night;
+      return typeof price === 'number' ? price : null;
     } catch (error) {
-      console.error("Error al obtener precio:", error)
-      return null
+      console.error('Error al leer el precio desde localStorage:', error);
+      return null;
     }
-  }
+  };
 
   const formatWithTime = (dateStr: string, hour: string): string => {
     const [year, month, day] = dateStr.split("-").map(Number)

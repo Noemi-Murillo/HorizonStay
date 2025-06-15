@@ -1,6 +1,7 @@
 import { database } from "@/lib/firebaseClient";
 import { ref, get } from "firebase/database";
 
+
 export async function getReservations() {
     try {
         const appDataRef = ref(database, `app_data/`);
@@ -41,3 +42,19 @@ export async function getReservations() {
         return { cottages: {}, reservations: {} };
     }
 }
+
+
+
+
+export async function getDataLocalStorage() {
+    const dbRef = ref(database, 'app_data/');
+    const snapshot = await get(dbRef);
+
+    if (!snapshot.exists()) {
+        throw new Error('No se encontraron datos en Firebase');
+    }
+
+    return snapshot.val();
+}
+
+
