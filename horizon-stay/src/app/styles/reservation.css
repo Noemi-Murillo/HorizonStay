@@ -49,6 +49,10 @@
   margin-bottom: 5px;
 }
 
+a.fc-timeline-slot-cushion {
+  pointer-events: none;
+}
+
 .fc-license-message {
   display: none !important;
 }
