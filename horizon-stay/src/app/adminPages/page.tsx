@@ -14,12 +14,15 @@ import { auth } from '@/lib/firebaseClient';
 import { signOut } from 'firebase/auth';
 import EventModal from '@/components/reservationComponents/modalEvent';
 import EditEventModal from '@/components/reservationComponents/editEventModal';
+ 
+import MonthSelectorModal from '@/components/reservationComponents/monthSelectorModal'
 
 export default function Reservations() {
   const [events, setEvents] = useState<any[]>([]);
   const [resources, setResources] = useState<any[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [priceModalOpen, setPriceModalOpen] = useState(false);
+  const [arrangementModalOpen, setArrangementModalOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -130,148 +133,147 @@ export default function Reservations() {
       info.revert();
     }
 
-    
+
 
   };
 
   return (
     <div className="max-w-[1400px] mx-auto p-1">
-    <div className="max-w-[1400px] mx-auto p-1  mb-10">
-      <h1 className="text-2xl font-bold prueba">Reservaciones</h1>
-      <p className="mt-2 text-gray-600">Mantenimiento de reservaciones</p>
-      <p className=" text-gray-600">Mantenimiento de reservaciones</p>
+      <div className="max-w-[1400px] mx-auto p-1  mb-10">
+        <h1 className="text-2xl font-bold prueba">Reservaciones</h1>
+        <p className="mt-2 text-gray-600">Mantenimiento de reservaciones</p>
+        <p className=" text-gray-600">Mantenimiento de reservaciones</p>
 
-      <EventModal
-        isOpen={eventModalOpen}
-        onClose={() => setEventModalOpen(false)}
-        eventData={selectedEvent}
-        onConfirm={async () => {
-          const eventoConfirmar = {
-            id: selectedEvent.id,
-            ids: selectedEvent.extendedProps.ids
-          };
-          const res = await fetch('/api/confirmReservation', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ eventoConfirmar })
-          });
-          const result = await res.json();
-          if (result.ok) {
-            Swal.fire('Confirmado', 'La reservación fue creada correctamente.', 'success');
-            setTimeout(() => window.location.reload(), 1900);
-          } else {
-            Swal.fire('Error', 'No se pudo confirmar la reservacion.', 'error');
-          }
-          setEventModalOpen(false);
-        }}
-        onEdit={() => { }}
-        onDelete={async () => {
-          const confirm = await Swal.fire({
-            title: '¿Eliminar evento?',
-            text: 'Esta acción no se puede deshacer.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-          });
-          if (confirm.isConfirmed) {
-            const type = selectedEvent.extendedProps.type;
-            const eventoAEliminar = {
+        <EventModal
+          isOpen={eventModalOpen}
+          onClose={() => setEventModalOpen(false)}
+          eventData={selectedEvent}
+          onConfirm={async () => {
+            const eventoConfirmar = {
               id: selectedEvent.id,
               ids: selectedEvent.extendedProps.ids
             };
-            const endpoint = type === 'bloqueo' ? '/api/deleteBlocks' : '/api/deleteReservation';
-            const res = await fetch(endpoint, {
+            const res = await fetch('/api/confirmReservation', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ eventoAEliminar })
+              body: JSON.stringify({ eventoConfirmar })
             });
             const result = await res.json();
             if (result.ok) {
-              Swal.fire('Eliminado', `${type === 'bloqueo' ? 'El bloqueo' : 'La reservación'} fue eliminado correctamente.`, 'success');
-              setEventModalOpen(false);
-              setEvents(prev => prev.filter(e => e.id !== selectedEvent.id));
+              Swal.fire('Confirmado', 'La reservación fue creada correctamente.', 'success');
+              setTimeout(() => window.location.reload(), 1900);
             } else {
-              Swal.fire('Error', 'No se pudo eliminar.', 'error');
+              Swal.fire('Error', 'No se pudo confirmar la reservacion.', 'error');
             }
-          }
-        }}
-      />
+            setEventModalOpen(false);
+          }}
+          onEdit={() => { }}
+          onDelete={async () => {
+            const confirm = await Swal.fire({
+              title: '¿Eliminar evento?',
+              text: 'Esta acción no se puede deshacer.',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Sí, eliminar',
+            });
+            if (confirm.isConfirmed) {
+              const type = selectedEvent.extendedProps.type;
+              const eventoAEliminar = {
+                id: selectedEvent.id,
+                ids: selectedEvent.extendedProps.ids
+              };
+              const endpoint = type === 'bloqueo' ? '/api/deleteBlocks' : '/api/deleteReservation';
+              const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ eventoAEliminar })
+              });
+              const result = await res.json();
+              if (result.ok) {
+                Swal.fire('Eliminado', `${type === 'bloqueo' ? 'El bloqueo' : 'La reservación'} fue eliminado correctamente.`, 'success');
+                setEventModalOpen(false);
+                setEvents(prev => prev.filter(e => e.id !== selectedEvent.id));
+              } else {
+                Swal.fire('Error', 'No se pudo eliminar.', 'error');
+              }
+            }
+          }}
+        />
 
-      <BlockModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        cottages={resources}
-        onSubmit={async (start, end, cottageId, description) => {
+        <BlockModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          cottages={resources}
+          onSubmit={async (start, end, cottageId, description) => {
 
-          const overlapExists = events.some((event) => {
-            const isSameCottage = event.resourceId === cottageId;
-            const eventStart = new Date(event.start).getTime();
-            const eventEnd = new Date(event.end).getTime();
-            const blockStart = new Date(start).getTime();
-            const blockEnd = new Date(end).getTime();
-            return isSameCottage && blockStart < eventEnd && blockEnd > eventStart;
-          });
-          if (overlapExists) {
-            Swal.fire('Error', 'Ya existe una reserva o bloqueo en ese rango de fechas.', 'error');
-            return;
-          }
-          const response = await fetch('/api/createBlock', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ start, end, cottageId, description })
-          });
-          if (response.ok) {
-            Swal.fire('¡Éxito!', 'Se ha guardado el bloqueo exitosamente.', 'success');
-            setTimeout(() => window.location.reload(), 1900);
-          } else {
-            Swal.fire('Error', 'No se pudo guardar el bloqueo.', 'warning');
-          }
-        }}
-      />
+            const overlapExists = events.some((event) => {
+              const isSameCottage = event.resourceId === cottageId;
+              const eventStart = new Date(event.start).getTime();
+              const eventEnd = new Date(event.end).getTime();
+              const blockStart = new Date(start).getTime();
+              const blockEnd = new Date(end).getTime();
+              return isSameCottage && blockStart < eventEnd && blockEnd > eventStart;
+            });
+            if (overlapExists) {
+              Swal.fire('Error', 'Ya existe una reserva o bloqueo en ese rango de fechas.', 'error');
+              return;
+            }
+            const response = await fetch('/api/createBlock', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ start, end, cottageId, description })
+            });
+            if (response.ok) {
+              Swal.fire('¡Éxito!', 'Se ha guardado el bloqueo exitosamente.', 'success');
+              setTimeout(() => window.location.reload(), 1900);
+            } else {
+              Swal.fire('Error', 'No se pudo guardar el bloqueo.', 'warning');
+            }
+          }}
+        />
 
-      <PriceModal isOpen={priceModalOpen} onClose={() => setPriceModalOpen(false)} />
+        <PriceModal isOpen={priceModalOpen} onClose={() => setPriceModalOpen(false)} />
 
-      <button className="bg-green-600 hover:bg-green-700 transition px-8 py-3 my-5 mr-5 rounded-full text-white text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>Crear bloqueos</button>
-      <div className="flex justify-between items-center flex-wrap gap-2 my-5">
-        <div className="flex gap-5">
+        <button className="bg-green-600 hover:bg-green-700 transition px-8 py-3 my-5 mr-5 rounded-full text-white text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>Crear bloqueos</button>
+        <div className="flex justify-between items-center flex-wrap gap-2 my-5">
+          <div className="flex gap-5">
 
-          <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>Crear bloqueos</button>
+            <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>Crear bloqueos</button>
 
-          <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setPriceModalOpen(true)}>Gestionar precios</button>
+            <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setPriceModalOpen(true)}>Gestionar precios</button>
+            <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setArrangementModalOpen(true)}>Acomodar reservas</button>
+          </div>
+
+          <button onClick={handleLogout} className="ml-auto mt-05 w-40 px-4 py-2 bg-green-600 text-white font-bold rounded hover:bg-red-600 cursor-pointer">Cerrar sesión</button>
+
         </div>
 
-      <button className="bg-green-600 hover:bg-green-700 transition px-8 py-3 my-5 mr-5 rounded-full text-white text-lg w-80 cursor-pointer" onClick={() => setPriceModalOpen(true)}>Gestionar precios</button>
-        <button onClick={handleLogout} className="ml-auto mt-05 w-40 px-4 py-2 bg-green-600 text-white font-bold rounded hover:bg-red-600 cursor-pointer">Cerrar sesión</button>
+        <p>Guía de colores:</p>
+        <p className="mt-2 mb-5">🟢 Reservación confirmada y pagada  🟡 Reservación pendiente de pago   🔴 Bloqueo administrativo</p>
 
+        <FullCalendar
+          height={600}
+          plugins={[resourceTimelinePlugin, interactionPlugin]}
+          initialView="resourceTimelineMonth"
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'resourceTimelineMonth,resourceTimelineDay,resourceTimelineWeek'
+          }}
+          nowIndicator={true}
+          editable={true}
+          selectable={true}
+          selectMirror={true}
+          resources={resources}
+          events={events}
+          slotDuration="12:00:00"
+          eventDrop={handleEventDrop}
+          eventClick={handleEventClick}
+          locale={esLocale}
+        />
+        <MonthSelectorModal isOpen={arrangementModalOpen} onClose={() => setArrangementModalOpen(false)} />
+        <button onClick={handleLogout} className="mt-10 w-40 px-4 py-2 bg-green-500 text-white rounded hover:bg-red-600">Cerrar sesión</button>
       </div>
-
-      <p>Guía de colores:</p>
-      <p className="mt-2 mb-5">🟢 Reservación confirmada y pagada  🟡 Reservación pendiente de pago   🔴 Bloqueo administrativo</p>
-
-      <FullCalendar
-        height={600}
-        height={750}
-        plugins={[resourceTimelinePlugin, interactionPlugin]}
-        initialView="resourceTimelineMonth"
-        headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'resourceTimelineMonth,resourceTimelineDay,resourceTimelineWeek'
-        }}
-        nowIndicator={true}
-        editable={true}
-        selectable={true}
-        selectMirror={true}
-        resources={resources}
-        events={events}
-        slotDuration="12:00:00"
-        eventDrop={handleEventDrop}
-        eventClick={handleEventClick}
-        locale={esLocale}
-      />
-
-      <button onClick={handleLogout} className="mt-10 w-40 px-4 py-2 bg-green-500 text-white rounded hover:bg-red-600">Cerrar sesión</button>
-    </div>
     </div >
   );
 }
