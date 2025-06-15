@@ -49,6 +49,10 @@
   margin-bottom: 5px;
 }
 
+.fc-license-message {
+  display: none !important;
+}
+
 .popper[x-placement^="top"] .popper__arrow,
 .tooltip[x-placement^="top"] .tooltip-arrow {
   border-width: 5px 5px 0 5px;
@@ -127,9 +131,7 @@ body>main>div>main>div>div>div.fc-view-harness.fc-view-harness-active>div.fc-res
   color: #FFF !important;
 }
 
-.fc-license-message {
-  display: none !important;
-}
+
 
 
 
