@@ -13,6 +13,7 @@ const BlockModal = dynamic(() => import('@/components/reservationComponents/bloc
 const PriceModal = dynamic(() => import('@/components/reservationComponents/priceManagmentModal'), { ssr: false });
 const EventModal = dynamic(() => import('@/components/reservationComponents/modalEvent'), { ssr: false });
 const EditEventModal = dynamic(() => import('@/components/reservationComponents/editEventModal'), { ssr: false });
+const MonthSelectorModal = dynamic(() => import('@/components/reservationComponents/monthSelectorModal'), { ssr: false });
 
 const FullCalendar = dynamic(() => import('@fullcalendar/react'), { ssr: false });
 import interactionPlugin from '@fullcalendar/interaction';
@@ -39,6 +40,7 @@ export default function Reservations() {
   const [resources, setResources] = useState<any[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [priceModalOpen, setPriceModalOpen] = useState(false);
+  const [arrangementModalOpen, setArrangementModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [eventModalOpen, setEventModalOpen] = useState(false);
   const router = useRouter();
@@ -160,6 +162,7 @@ export default function Reservations() {
           <div className="flex gap-5">
             <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>Crear bloqueos</button>
             <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setPriceModalOpen(true)}>Gestionar precios</button>
+            <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setArrangementModalOpen(true)}>Acomodar reservas</button>
           </div>
           <button onClick={handleLogout} className="ml-auto w-40 px-4 py-2 bg-green-600 text-white font-bold rounded hover:bg-red-600 cursor-pointer">Cerrar sesión</button>
         </div>
@@ -187,6 +190,9 @@ export default function Reservations() {
           eventClick={handleEventClick}
           locale={esLocale}
         />
+
+        <MonthSelectorModal isOpen={arrangementModalOpen} onClose={() => setArrangementModalOpen(false)} />
+
 
         <EventModal
           isOpen={eventModalOpen}
