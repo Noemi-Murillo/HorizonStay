@@ -62,12 +62,12 @@ const Categoria = ({ titulo, contenido }: { titulo: string; contenido: string[] 
   const [abierto, setAbierto] = useState(false);
 
   return (
-    <div className="mb-4 border rounded-2xl overflow-hidden shadow-md transition-all ">
+    <div className="mb-4 border rounded-2xl overflow-hidden shadow-md transition-all">
       <button
         onClick={() => setAbierto(!abierto)}
-        className="w-full flex justify-between items-center px-5 py-4 bg-green-100 hover:bg-green-200 font-semibold text-lg text-left transition-colors"
+        className="w-full bg-green-600 hover:bg-green-700 transition px-6 py-4 text-white text-lg flex justify-between items-center"
       >
-        {titulo}
+        <span>{titulo}</span>
         {abierto ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
       </button>
       <AnimatePresence initial={false}>
@@ -93,7 +93,7 @@ const Categoria = ({ titulo, contenido }: { titulo: string; contenido: string[] 
 
 const CabinPolicies = () => {
   return (
-    <div className="max-w-4xl mx-auto p-6 mt-30">
+    <div className="max-w-4xl mx-auto p-6 mt-20">
       <h1 className="text-4xl font-bold mb-2">🏡 Políticas del Establecimiento</h1>
       <p className="text-sm text-gray-500 mb-6">Última actualización: 12-05-2025</p>
       {categorias.map((cat, i) => (
