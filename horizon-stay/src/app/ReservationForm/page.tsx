@@ -182,10 +182,11 @@ const ReservationForm = () => {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 border rounded max-w-md mx-auto mt-20 mb-10 max-w-md mx-auto p-8 shadow-xl border-gray-200 bg-white"
-    >
+    <main className="min-h-screen bg-[url('/cabins/Forest/6.png')] bg-center bg-no-repeat bg-cover animate-pan px-4 py-16">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="backdrop-blur-xl bg-white/30 border border-white/20 max-w-md mx-auto mt-20 mb-10 p-8 rounded-2xl shadow-2xl space-y-4"
+      >
       <h2 className="text-xl font-bold text-green-600">Reserva tu cabaña</h2>
 
       <div>
@@ -306,6 +307,7 @@ const ReservationForm = () => {
 
       <ReservationButton disabled={isSubmitting} />
     </form>
+    </main>
   )
 }
 
