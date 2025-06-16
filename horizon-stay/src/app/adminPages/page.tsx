@@ -142,7 +142,6 @@ export default function Reservations() {
       <div className="max-w-[1400px] mx-auto p-1  mb-10">
         <h1 className="text-2xl font-bold prueba">Reservaciones</h1>
         <p className="mt-2 text-gray-600">Mantenimiento de reservaciones</p>
-        <p className=" text-gray-600">Mantenimiento de reservaciones</p>
 
         <EventModal
           isOpen={eventModalOpen}
@@ -234,7 +233,6 @@ export default function Reservations() {
 
         <PriceModal isOpen={priceModalOpen} onClose={() => setPriceModalOpen(false)} />
 
-        <button className="bg-green-600 hover:bg-green-700 transition px-8 py-3 my-5 mr-5 rounded-full text-white text-lg w-80 cursor-pointer" onClick={() => setModalOpen(true)}>Crear bloqueos</button>
         <div className="flex justify-between items-center flex-wrap gap-2 my-5">
           <div className="flex gap-5">
 
