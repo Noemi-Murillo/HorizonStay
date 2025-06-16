@@ -47,7 +47,7 @@ export default function Reservations() {
             return {
               id,
               ids: value.ids,
-              title: Reserva ${id},
+              title: `Reserva ${id}`,
               start: value.start,
               end: value.end,
               resourceId: value.cottage_id,
@@ -190,7 +190,7 @@ export default function Reservations() {
               });
               const result = await res.json();
               if (result.ok) {
-                Swal.fire('Eliminado', ${type === 'bloqueo' ? 'El bloqueo' : 'La reservación'} fue eliminado correctamente., 'success');
+                Swal.fire('Eliminado', `${type === 'bloqueo' ? 'El bloqueo' : 'La reservación'} fue eliminado correctamente.`, 'success');
                 setEventModalOpen(false);
                 setEvents(prev => prev.filter(e => e.id !== selectedEvent.id));
               } else {
