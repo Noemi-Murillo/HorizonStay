@@ -104,11 +104,12 @@ export default function Navbar() {
           </Link>
         </div> */}
 
-        <div className="lg:hidden">
+        {/* <div className="lg:hidden">
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
-        </div>
+        </div> */}
+        
       </div>
     </nav>
   );

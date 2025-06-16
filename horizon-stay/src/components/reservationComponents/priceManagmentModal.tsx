@@ -39,7 +39,6 @@ export default function PriceManagementModal({ isOpen, onClose }: Props) {
     }))
     setPrices(result)
 
-    // Inicializa el estado de edición
     const initialEdits: Record<string, number> = {}
     result.forEach((item) => {
       initialEdits[item.type_id] = item.price_per_night
