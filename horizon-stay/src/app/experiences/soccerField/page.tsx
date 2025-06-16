@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
 import { ParallaxProvider } from "react-scroll-parallax";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -12,6 +13,7 @@ const Section = ({ title, description, image, reverse, bgColor }: {
   bgColor?: string;
 }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
+  const router = useRouter();
 
   return (
     <section
@@ -35,6 +37,11 @@ const Section = ({ title, description, image, reverse, bgColor }: {
       >
         <h2 className="text-3xl font-bold mb-4">{title}</h2>
         <p className="text-lg mb-4">{description}</p>
+        <button
+          onClick={() => router.push('/ReservationForm')}
+          className="bg-green-600 hover:bg-green-700 transition px-6 py-3 rounded-md text-white text-lg inline-block" >
+          Reserva Ahora
+        </button>
       </motion.div>
     </section>
   );

@@ -108,3 +108,29 @@ body {
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
 }
+
+@keyframes pan {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.animate-pan {
+  animation: pan 60s linear infinite;
+  background-size: 200% auto;
+}
+
+/* Respiración suave */
+@keyframes breathing {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+}
+
+.animate-breathing {
+  animation: breathing 5s ease-in-out infinite;
+}

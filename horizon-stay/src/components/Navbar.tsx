@@ -53,9 +53,9 @@ export default function Navbar() {
               {activeItem === "getToKnowUs" && (
                 <div className="absolute left-0 top-full mt-2 w-48 bg-white border rounded-xl shadow-lg z-10 origin-top-left animate-fade-in">
                   <ul className="flex flex-col p-2">
-                    <li><Link href="/aboutUs/location" className="block px-3 py-2 hover:bg-gray-100 rounded">Ubicación</Link></li>
                     <li><Link href="/aboutUs/history" className="block px-3 py-2 hover:bg-gray-100 rounded">Historia</Link></li>
                     <li><Link href="/aboutUs/policies" className="block px-3 py-2 hover:bg-gray-100 rounded">Políticas</Link></li>
+                    <li><Link href="/aboutUs/location" className="block px-3 py-2 hover:bg-gray-100 rounded">Ubicación y Contacto</Link></li>
                   </ul>
                 </div>
               )}
