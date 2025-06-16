@@ -242,7 +242,7 @@ export default function Reservations() {
             <button className="bg-green-600 hover:bg-yellow-400 transition px-8 py-3 my-5 mr-5 rounded text-white font-bold text-lg w-80 cursor-pointer" onClick={() => setArrangementModalOpen(true)}>Acomodar reservas</button>
           </div>
 
-          <button onClick={handleLogout} className="ml-auto mt-05 w-40 px-4 py-2 bg-green-600 text-white font-bold rounded hover:bg-red-600 cursor-pointer">Cerrar sesión</button>
+          <button onClick={handleLogout} className="ml-auto mt-05 w-40 px-4 py-2 bg-gray-600 text-white font-bold rounded hover:bg-red-600 cursor-pointer">Cerrar sesión</button>
 
         </div>
 
