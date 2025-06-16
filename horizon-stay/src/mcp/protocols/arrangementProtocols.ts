@@ -26,11 +26,17 @@ Contexto:
 Reservas actuales:
 ${reservations.map(r => `Reserva ${r.reserve_number} del ${r.start} al ${r.end} en ${r.cottage_id}`).join('\n')}
 
-Reglas:
-- Las fechas de las reservas no se pueden modificar.
-- No puede haber traslapes entre reservas del mismo tipo de cabaña.
-- Las reservas solo se pueden mover entre cabañas del mismo tipo.
-- Mueve la menor cantidad de reservas posibles para resolver los conflictos.
+**Estructura de las cabañas**:
+- Hay tres tipos de cabañas según su capacidad:
+  - COT001: Cabañas del Lago → COT001, COT001A, COT001B, COT001C, COT001D
+  - COT002: Cabañas del Árbol → COT002, COT002A, COT002B, COT002C, COT002D
+  - COT003: Cabañas del Bosque → COT003, COT003A, COT003B, COT003C, COT003D
+
+**Reglas importantes**:
+- Cada reserva solo puede moverse dentro del mismo tipo de cabaña (según el tipo que reservó originalmente).
+- No se puede cambiar la fecha ni la hora de la reserva, solo el "cottage_id".
+- Si hay traslapes entre reservas de un mismo tipo, reacomoda las reservas en otras cabañas del mismo tipo para resolver los conflictos.
+- Es permitido que una reserva termine el mismo día que otra empieza, siempre y cuando no se traslapen en hora (las salidas y entradas son al mediodía).
 
 Pregunta:
 ¿A qué cabaña moverías cada reserva para evitar traslapes? Solo incluye en el JSON las que sí deben moverse.
