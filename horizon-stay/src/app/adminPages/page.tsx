@@ -14,7 +14,7 @@ import { auth } from '@/lib/firebaseClient';
 import { signOut } from 'firebase/auth';
 import EventModal from '@/components/reservationComponents/modalEvent';
 import EditEventModal from '@/components/reservationComponents/editEventModal';
- 
+
 import MonthSelectorModal from '@/components/reservationComponents/monthSelectorModal'
 
 export default function Reservations() {
@@ -259,7 +259,7 @@ export default function Reservations() {
             right: 'resourceTimelineMonth,resourceTimelineDay,resourceTimelineWeek'
           }}
           nowIndicator={true}
-          resourceAreaHeaderContent="Cabañas" 
+          resourceAreaHeaderContent="Cabañas"
           editable={true}
           selectable={true}
           selectMirror={true}
@@ -269,6 +269,11 @@ export default function Reservations() {
           eventDrop={handleEventDrop}
           eventClick={handleEventClick}
           locale={esLocale}
+          eventContent={(arg) => (
+            <div style={{ color: 'black' }}>
+              <b>{arg.timeText}</b> <span>{arg.event.title}</span>
+            </div>
+          )}
         />
         <MonthSelectorModal isOpen={arrangementModalOpen} onClose={() => setArrangementModalOpen(false)} />
         <button onClick={handleLogout} className="mt-10 w-40 px-4 py-2 bg-green-500 text-white rounded hover:bg-red-600">Cerrar sesión</button>
