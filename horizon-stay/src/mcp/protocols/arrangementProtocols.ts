@@ -9,32 +9,32 @@ import { openai } from "@/services/openai"
 
 function buildPrompt(type: string, reservations: Reservation[], cottageIds: string[]): string {
   return `
-  Eres un optimizador de reservaciones. 
+Eres un optimizador de reservaciones.
+
 Solo responde con un arreglo JSON, sin explicaciones, en este formato:
 [
   {
     "reserve_number": "RES123",
-    "new_start": "2025-06-10T12:00:00Z",
-    "new_end": "2025-06-12T12:00:00Z",
     "new_cottage_id": "COTTAGE01"
   }
 ]
 
 Contexto:
-Tipo de cabaña: ${type}
-Cabañas disponibles: ${cottageIds.join(", ")}
+- Tipo de cabaña: ${type}
+- Cabañas disponibles: ${cottageIds.join(', ')}
 
 Reservas actuales:
-${reservations.map(r => `Reserva ${r.reserve_number} del ${r.start} al ${r.end} en ${r.cottage_id}`).join("\n")}
+${reservations.map(r => `Reserva ${r.reserve_number} del ${r.start} al ${r.end} en ${r.cottage_id}`).join('\n')}
 
 Reglas:
-- No puede haber traslapes entre reservas.
-- Las reservas deben permanecer dentro del mismo tipo de cabaña que se especifica en la reservación.
-- Si hay conflictos, se deben mover lo mínimo posible y solo dentro del mismo tipo.
+- Las fechas de las reservas no se pueden modificar.
+- No puede haber traslapes entre reservas del mismo tipo de cabaña.
+- Las reservas solo se pueden mover entre cabañas del mismo tipo.
+- Mueve la menor cantidad de reservas posibles para resolver los conflictos.
 
 Pregunta:
-¿Cómo redistribuirías estas reservaciones para evitar conflictos? 
-`
+¿A qué cabaña moverías cada reserva para evitar traslapes? Solo incluye en el JSON las que sí deben moverse.
+  `.trim()
 }
 
 export const ArrangementContextProtocol: ArrangementContext = {
@@ -88,27 +88,23 @@ export const ArrangementContextProtocol: ArrangementContext = {
         })
 
         const content = completion.choices[0].message.content || "[]"
-        console.log("🧠 Contenido devuelto por OpenAI:", content)
+        console.log("🧠 Contenido IA:", content)
+
         const parsed = JSON.parse(content) as {
           reserve_number: string
-          new_start: string
-          new_end: string
           new_cottage_id: string
         }[]
-        console.log("✅ Cambios sugeridos:", parsed)
+        console.log("✅ Cambios que se aplicarán:", parsed)
+
         for (const change of parsed) {
           const original = allReservations[change.reserve_number]
           if (!original) continue
 
-          await set(ref(database, `app_data/reservations/${change.reserve_number}`), {
-            ...original,
-            start: change.new_start,
-            end: change.new_end,
-            cottage_id: change.new_cottage_id
-          })
+          await set(ref(database, `app_data/reservations/${change.reserve_number}/cottage_id`), change.new_cottage_id)
         }
+
       } catch (err) {
-        console.error(`Error al analizar el tipo ${type}:`, err)
+        console.error(`❌ Error al analizar el tipo ${type}:`, err)
       }
     }
   }
