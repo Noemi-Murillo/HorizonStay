@@ -259,6 +259,7 @@ export default function Reservations() {
             right: 'resourceTimelineMonth,resourceTimelineDay,resourceTimelineWeek'
           }}
           nowIndicator={true}
+          resourceAreaHeaderContent="Cabañas" 
           editable={true}
           selectable={true}
           selectMirror={true}
