@@ -14,7 +14,7 @@ export default function Home() {
         {/* Encabezado con imagen */}
         <section
           className="relative w-full h-[70vh] bg-cover bg-center bg-no-repeat flex items-center justify-center"
-          style={{ backgroundImage: "url('/cabins/horizonStay.png')" }}
+          style={{ backgroundImage: "url('/cabins/horizonStay.jpg')" }}
         >
           <div className="bg-black/50 w-full h-full absolute top-0 left-0" />
           <div className="relative z-10 text-center text-white px-6 max-w-2xl">

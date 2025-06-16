@@ -1,8 +1,9 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 
 type CabinListProps = {
   type: 'forest' | 'lake' | 'mountain';
@@ -22,9 +23,10 @@ const getImagesByType = (type: string): string[] => {
 };
 
 const CabinList = ({ type }: CabinListProps) => {
-  const images = getImagesByType(type);
+  const images = useMemo(() => getImagesByType(type), [type]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     slides: { perView: 1, spacing: 10 },
@@ -38,25 +40,31 @@ const CabinList = ({ type }: CabinListProps) => {
   });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      instanceRef.current?.next();
-    }, 4000);
-    return () => clearInterval(interval);
+    if (instanceRef.current) {
+      intervalRef.current = setInterval(() => {
+        instanceRef.current?.next();
+      }, 4000);
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, [instanceRef]);
 
-  const totalSlides = instanceRef.current?.track.details.slides.length || 0;
-  const totalDots = totalSlides;
+  const totalDots = instanceRef.current?.track.details.slides.length || 0;
 
   return (
     <section className="max-w-screen-md mx-auto px-4 py-10 relative">
       <div ref={sliderRef} className="keen-slider overflow-hidden rounded-lg">
         {images.map((src, idx) => (
           <div key={idx} className="keen-slider__slide flex justify-center items-center">
-            <img
+            <Image
               src={src}
-              alt={`Imagen ${idx}`}
-              className="mx-auto rounded-lg"
-              loading="lazy"
+              alt={`Cabaña ${type} ${idx + 1}`}
+              width={800}
+              height={500}
+              className="rounded-lg object-cover"
+              priority={idx === 0} // Mejora LCP
+              loading={idx === 0 ? 'eager' : 'lazy'}
             />
           </div>
         ))}
@@ -79,20 +87,17 @@ const CabinList = ({ type }: CabinListProps) => {
         </>
       )}
 
-      {loaded && instanceRef.current && (
+      {loaded && (
         <div className="flex justify-center mt-4 gap-3">
-          {[...Array(totalDots).keys()].map((idx) => {
-            const isActive = currentSlide === idx;
-            return (
-              <button
-                key={idx}
-                onClick={() => instanceRef.current?.moveToIdx(idx)}
-                className={`w-3 h-3 rounded-full ${
-                  isActive ? 'bg-black scale-125' : 'bg-gray-400'
-                }`}
-              ></button>
-            );
-          })}
+          {[...Array(totalDots).keys()].map((idx) => (
+            <button
+              key={idx}
+              onClick={() => instanceRef.current?.moveToIdx(idx)}
+              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                currentSlide === idx ? 'bg-black scale-125' : 'bg-gray-400'
+              }`}
+            ></button>
+          ))}
         </div>
       )}
     </section>
