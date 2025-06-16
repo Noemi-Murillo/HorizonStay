@@ -93,7 +93,7 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-
+{/* 
         <div className="hidden lg:block">
           <Link
             href="/logIn"
@@ -102,7 +102,7 @@ export default function Navbar() {
           >
             Iniciar sesión
           </Link>
-        </div>
+        </div> */}
 
         <div className="lg:hidden">
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>

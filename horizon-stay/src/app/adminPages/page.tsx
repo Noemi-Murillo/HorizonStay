@@ -270,7 +270,6 @@ export default function Reservations() {
           locale={esLocale}
         />
         <MonthSelectorModal isOpen={arrangementModalOpen} onClose={() => setArrangementModalOpen(false)} />
-        <button onClick={handleLogout} className="mt-10 w-40 px-4 py-2 bg-green-500 text-white rounded hover:bg-red-600">Cerrar sesión</button>
       </div>
     </div >
   );
